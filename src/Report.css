@@ -1,0 +1,34 @@
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.roles-table th,
+.roles-table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.roles-table th {
+  background-color: #f2f2f2;
+}
+
+.roles-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.roles-table tr:hover {
+  background-color: #f2f2f2;
+}
+
+.roles-table th:first-child,
+.roles-table td:first-child {
+  border-left: none;
+}
+
+.roles-table th:last-child,
+.roles-table td:last-child {
+  border-right: none;
+}
