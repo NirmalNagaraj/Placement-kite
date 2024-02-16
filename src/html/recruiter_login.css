@@ -1,0 +1,255 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    background-color: #fff;
+    padding-right: 80px;
+}
+
+@media (max-width: 991px) {
+    .container {
+        padding-right: 20px;
+    }
+}
+
+.container-2 {
+    gap: 20px;
+    display: flex;
+}
+
+@media (max-width: 991px) {
+    .container-2 {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0px;
+    }
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    width: 62%;
+    margin-left: 0px;
+}
+
+@media (max-width: 991px) {
+    .column {
+        width: 100%;
+    }
+}
+
+.box-1 {
+    background-color: #2e2af7;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    width: 100%;
+    padding: 50px 30px;
+}
+
+@media (max-width: 991px) {
+    .box-1 {
+        max-width: 100%;
+        margin-top: 40px;
+        padding: 0 20px;
+    }
+}
+
+.img {
+    aspect-ratio: 1.45;
+    object-fit: auto;
+    object-position: center;
+    width: 65px;
+    border-radius: 14px;
+    margin: 6px 0 0 35px;
+}
+
+@media (max-width: 991px) {
+    .img {
+        margin-left: 10px;
+    }
+}
+
+.img-2 {
+    aspect-ratio: 1;
+    object-fit: auto;
+    object-position: center;
+    width: 100%;
+    margin-top: 81px;
+}
+
+@media (max-width: 991px) {
+    .img-2 {
+        max-width: 100%;
+        margin-top: 40px;
+    }
+}
+
+.column-2 {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    width: 38%;
+    margin-left: 20px;
+}
+
+@media (max-width: 991px) {
+    .column-2 {
+        width: 100%;
+    }
+}
+
+.box-2 {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    margin: auto 0;
+}
+
+@media (max-width: 991px) {
+    .box-2 {
+        max-width: 100%;
+        margin-top: 40px;
+    }
+}
+
+.heading {
+    color: #000;
+    letter-spacing: 2px;
+    font: 400 40px/90% Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+@media (max-width: 991px) {
+    .heading {
+        max-width: 100%;
+    }
+}
+
+.description {
+    color: #000;
+    letter-spacing: 1px;
+    margin-top: 12px;
+    font: 400 20px/22px Inter, sans-serif;
+}
+
+@media (max-width: 991px) {
+    .description {
+        max-width: 100%;
+    }
+}
+
+.label {
+    color: #000;
+    letter-spacing: 1.2px;
+    margin-top: 33px;
+    font: 400 24px/90% Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+}
+
+@media (max-width: 991px) {
+    .label {
+        max-width: 100%;
+    }
+}
+
+.input {
+    border-radius: 15px;
+    background-color: #d9d9d9;
+    margin-top: 19px;
+    height: 82px;
+}
+
+@media (max-width: 991px) {
+    .input {
+        max-width: 100%;
+    }
+}
+
+.password {
+    display: flex;
+    margin-top: 33px;
+    padding-right: 80px;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 24px;
+    color: #000;
+    font-weight: 400;
+    white-space: nowrap;
+    letter-spacing: 1.2px;
+    line-height: 90%;
+}
+
+@media (max-width: 991px) {
+    .password {
+        max-width: 100%;
+        flex-wrap: wrap;
+        padding-right: 20px;
+        white-space: initial;
+    }
+}
+
+.password .label {
+    font-family: Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+    flex-grow: 1;
+    flex-basis: auto;
+}
+
+.img-3 {
+    aspect-ratio: 1.12;
+    object-fit: auto;
+    object-position: center;
+    width: 35px;
+}
+
+.checkbox {
+    border-radius: 15px;
+    background-color: #d9d9d9;
+    height: 82px;
+}
+
+.footer {
+    align-self: start;
+    display: flex;
+    gap: 0px;
+    font-size: 20px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    line-height: 111%;
+    margin: 17px 0 0 14px;
+}
+
+@media (max-width: 991px) {
+    .footer {
+        margin-left: 10px;
+        white-space: initial;
+    }
+}
+
+.message {
+    color: #000;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    flex-grow: 1;
+}
+
+@media (max-width: 991px) {
+    .message {
+        white-space: initial;
+    }
+}
+
+.sign-up {
+    color: #124ada;
+    font-family: Yaldevi Colombo SemiBold, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 600;
+    flex-grow: 1;
+}
+
+@media (max-width: 991px) {
+    .sign-up {
+        white-space: initial;
+    }
+}

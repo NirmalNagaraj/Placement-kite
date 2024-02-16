@@ -1,0 +1,307 @@
+.container {
+    background-color: #fff;
+    padding-right: 80px;
+  }
+  
+  @media (max-width: 991px) {
+    .container {
+      padding-right: 20px;
+    }
+  }
+  
+  .container-2 {
+    gap: 20px; 
+    display: flex;
+    height: 100vh;
+  }
+  
+  @media (max-width: 991px) {
+    .container-2 {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0px;
+      height: 100vh;
+    }
+  }
+  
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    width: 62%;
+    margin-left: 0px;
+  }
+  
+  @media (max-width: 991px) {
+    .left-column {
+      width: 100%;
+    }
+  }
+  
+  .logo-section {
+    background-color: #031da2;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    width: 100%;
+    padding: 50px 8px;
+  }
+  
+  @media (max-width: 991px) {
+    .logo-section {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .logo {
+    aspect-ratio: 1.45;
+    object-fit: auto;
+    object-position: center;
+    width: 65px;
+    border-radius: 14px;
+    margin: 6px 0 0 57px;
+  }
+  
+  @media (max-width: 991px) {
+    .logo {
+      margin-left: 10px;
+    }
+  }
+  
+  .logo-2 {
+    aspect-ratio: 1;
+    object-fit: auto;
+    object-position: center;
+    width: 100%;
+    margin-top: 68px;
+    
+  }
+  .auto{
+    max-width: 100%;
+    height: auto;
+  }
+  
+  @media (max-width: 991px) {
+    .logo-2 {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .right-column {
+    display: flex;
+    flex-direction: column;
+    line-height: normal;
+    width: 38%;
+    margin-left: 20px;
+  }
+  
+  @media (max-width: 991px) {
+    .right-column {
+      width: 100%;
+    }
+  }
+  
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    margin: auto 0;
+  }
+  
+  @media (max-width: 991px) {
+    .login-form {
+      max-width: 100%;
+      margin-top: 40px;
+    }
+  }
+  
+  .heading {
+    color: #000;
+    letter-spacing: 2px;
+    font: 400 40px/90% Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  
+  @media (max-width: 991px) {
+    .heading {
+      max-width: 100%;
+    }
+  }
+  
+  .sub-heading {
+    color: #000;
+    letter-spacing: 1px;
+    margin-top: 12px;
+    font: 400 20px/22px Inter, sans-serif;
+  }
+  
+  @media (max-width: 991px) {
+    .sub-heading {
+      max-width: 100%;
+    }
+  }
+  
+  .input-label {
+    color: #000;
+    letter-spacing: 1.2px;
+    margin-top: 33px;
+    font: 400 24px/90% Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  
+  @media (max-width: 991px) {
+    .input-label {
+      max-width: 100%;
+    }
+  }
+  
+  .input-field {
+    border-radius: 15px;
+    background-color: #d9d9d9;
+    margin-top: 19px;
+    height: 50px;
+  }
+  
+  @media (max-width: 991px) {
+    .input-field {
+      max-width: 100%;
+    }
+  }
+  
+  .password-field {
+    display: flex;
+    margin-top: 33px;
+    padding-right: 78px;
+    justify-content: space-between;
+    gap: 20px;
+    font-size: 24px;
+    color: #000;
+    font-weight: 400;
+    white-space: nowrap;
+    letter-spacing: 1.2px;
+    line-height: 90%;
+  }
+  
+  @media (max-width: 991px) {
+    .password-field {
+      max-width: 100%;
+      flex-wrap: wrap;
+      padding-right: 20px;
+      white-space: initial;
+    }
+  }
+  
+  .password-label {
+    font-family: Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+    flex-grow: 1;
+    flex-basis: auto;
+  }
+  
+  .password-icon {
+    aspect-ratio: 1.12;
+    object-fit: auto;
+    object-position: center;
+    width: 35px;
+  }
+  
+  .checkbox-section {
+    display: flex;
+    width: 322px;
+    max-width: 100%;
+    flex-direction: column;
+    font-weight: 400;
+    margin: 15px 0 0 14px;
+  }
+  
+  @media (max-width: 991px) {
+    .checkbox-section {
+      margin-left: 10px;
+    }
+  }
+  
+  .remember-me {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 20px;
+    color: #000;
+    letter-spacing: 1px;
+    line-height: 111%;
+  }
+  
+  .check-icon {
+    aspect-ratio: 1;
+    object-fit: auto;
+    object-position: center;
+    width: 24px;
+    align-self: start;
+  }
+  
+  .remember-text {
+    font-family: Inter, sans-serif;
+    flex-grow: 1;
+    flex-basis: auto;
+  }
+  
+  .login-button {
+    justify-content: center;
+    border-radius: 21px;
+    background-color: #2e3192;
+    align-self: end;
+    margin-top: 30px;
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: 1.4px;
+    padding: 19px 58px;
+    font: 28px/90% Arial Rounded MT Bold, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  .lo{
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  @media (max-width: 991px) {
+    .login-button {
+      white-space: initial;
+      padding: 0 20px;
+    }
+  }
+  
+  .signup-section {
+    align-self: start;
+    display: flex;
+    gap: 0px; 
+    font-size: 20px;
+    white-space: nowrap;
+    letter-spacing: 1px;
+    line-height: 111%;
+    margin: 17px 0 0 14px;
+  }
+  
+  @media (max-width: 991px) {
+    .signup-section {
+      margin-left: 10px;
+      white-space: initial;
+    }
+  }
+  
+  .no-account {
+    color: #000;
+    font-family: Inter, sans-serif;
+    font-weight: 400;
+    flex-grow: 1;
+  }
+  
+  .signup-link {
+    color: #124ada;
+    font-family: Yaldevi Colombo SemiBold, -apple-system, Roboto, Helvetica, sans-serif;
+    font-weight: 600;
+    flex-grow: 1;
+  }
+  
+  @media (max-width: 991px) {
+    .signup-link {
+      white-space: initial;
+    }
+  }
+  
