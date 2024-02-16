@@ -1,5 +1,5 @@
 import React from 'react'
-import './App.css'
+import './Home.css'
 import KiteLogo from './images/Kite logo.png'
 import Interview from './images/Interview-rafiki.png'
 
