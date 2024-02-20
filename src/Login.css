@@ -1,0 +1,8 @@
+.form-container{
+    padding: 120px 500px;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
