@@ -1,20 +1,20 @@
 const express = require('express');
-const jwt = require('jsonwebtoken');
-
 const mysql = require('mysql2');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
 
 const app = express();
 const port = 3000;
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Beelzebub03',
-  database: 'students_data'
+  database: 'students_data',
 });
 
 connection.connect((error) => {
@@ -25,13 +25,14 @@ connection.connect((error) => {
   console.log('Connected to the database successfully');
 });
 
-// Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    return res.status(403).json({ error: 'No token provided' });
+    alert("Unauthorized , login first");
+    return res.status(401).json({ error: 'No token provided' });
+    
   }
-  jwt.verify(token, 'secret_key', (err, decoded) => {
+  jwt.verify(token.split(' ')[1], 'secret_key', (err, decoded) => {
     if (err) {
       return res.status(401).json({ error: 'Failed to authenticate token' });
     }
@@ -39,6 +40,7 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
+app.use(bodyParser.json());
 
 app.get('/api/data', (req, res) => {
   const tenthValue = parseFloat(req.query.tenth) || 0;
@@ -87,18 +89,13 @@ app.post('/login', (req, res) => {
     }
 
     const user = results[0];
-    console.log('User Password from DB:', user.Password);
-    console.log('Password from Request:', password);
 
     // Trim whitespace from both passwords
     const trimmedDBPassword = user.Password.trim();
     const trimmedProvidedPassword = password.trim();
 
-    console.log('Trimmed DB Password:', trimmedDBPassword);
-    console.log('Trimmed Provided Password:', trimmedProvidedPassword);
-
     // Compare trimmed passwords
-    if (trimmedDBPassword !== trimmedProvidedPassword) { // Compare passwords directly
+    if (trimmedDBPassword !== trimmedProvidedPassword) {
       console.log('Passwords do not match');
       return res.status(401).json({ error: 'Invalid university roll number or password' });
     }
@@ -108,13 +105,36 @@ app.post('/login', (req, res) => {
   });
 });
 
-
-
-
-// Example protected route
-app.get('/dashboard', verifyToken, (req, res) => {x
-  res.json({ message: 'Accessed dashboard successfully', user: req.user });
+app.get('/dashboard', verifyToken, (req, res) => {
+  res.json({
+    message: 'Accessed dashboard successfully',
+    user: {
+      name: req.user.name,
+      universityRollNumber: req.user.universityRollNumber,
+    },
+  });
 });
+
+app.post('/company-data', (req, res) => {
+  const { name, date, ctc, criteria } = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, criteria) VALUES (?, ?, ?, ?)`;
+  connection.query(query, [name, date, ctc, criteria], (error, results, fields) => {
+    if (error) throw error;
+    res.send('Data inserted successfully');
+  });
+});
+
+app.get('/upcoming', (req, res) => {
+  const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
+    if (error) {
+      console.error('Error fetching upcoming company data:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching upcoming company data' });
+    }
+    res.json(results);
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
