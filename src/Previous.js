@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography } from '@mui/material';
 
-function UpcomingPage() {
-  const [upcomingCompanyData, setUpcomingCompanyData] = useState([]);
+function PreviousPage() {
+  const [previousCompanyData, setPreviousCompanyData] = useState([]);
 
   useEffect(() => {
-    async function fetchUpcomingCompanyData() {
+    async function fetchPreviousCompanyData() {
       try {
-        const response = await axios.get('http://localhost:3000/upcoming');
-        setUpcomingCompanyData(response.data);
+        const response = await axios.get('http://localhost:3000/previous');
+        setPreviousCompanyData(response.data);
       } catch (error) {
-        console.error('Error fetching upcoming company data:', error);
+        console.error('Error fetching previous company data:', error);
       }
     }
-    fetchUpcomingCompanyData();
+    fetchPreviousCompanyData();
   }, []);
 
   // Function to format date
@@ -25,8 +25,8 @@ function UpcomingPage() {
 
   return (
     <div>
-      <h2>Upcoming Company Data</h2>
-      {upcomingCompanyData.map((company) => (
+      <h2>Previous Company Data</h2>
+      {previousCompanyData.map((company) => (
         <Card key={company.id} variant="outlined" style={{ marginBottom: '10px' }}>
           <CardContent>
             <Typography variant="h5" component="h2">
@@ -48,4 +48,4 @@ function UpcomingPage() {
   );
 }
 
-export default UpcomingPage;
+export default PreviousPage;

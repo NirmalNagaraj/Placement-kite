@@ -135,6 +135,18 @@ app.get('/upcoming', (req, res) => {
   });
 });
 
+app.get('/previous', (req, res) => {
+  const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  connection.query('SELECT * FROM company_data WHERE date < ?', [currentDate], (error, results, fields) => {
+    if (error) {
+      console.error('Error fetching previous company data:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching previous company data' });
+    }
+    res.json(results);
+  });
+});
+
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
