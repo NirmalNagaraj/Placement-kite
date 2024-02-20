@@ -1,0 +1,40 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin:0;
+    overflow: hidden;
+}
+.container{
+    display:flex ;
+    max-height: 100vh;}
+
+.right{
+        background-color: white;
+        flex: 1;
+        height: 100vh;
+        padding-top: 200px;  
+    }
+.left{
+        background-color: rgb(11, 11, 11);
+        flex: 1;
+        height: 100vh;
+    }
+    
+.form-group{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap:20px;
+    }
+
+.form{
+    padding: 10px 0;
+    width:70vh;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap:20px;
+}
