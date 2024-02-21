@@ -1,0 +1,45 @@
+body{
+    padding: 0%;
+    margin: 0%;
+    overflow: hidden;
+
+}
+
+.main-content{
+    display: flex;
+    
+}
+
+.image-content{
+    background-color: black;
+    width: 50vw;
+    height: 100vh;
+}
+
+.right-content{
+   margin-top:100px;
+   margin-left: 150px;
+}
+
+.login-content{
+    color: red;
+    padding-bottom: 20px;
+}
+
+.email, .pass{
+    font-size: 9px;
+}
+
+input{
+    height: 35px;
+    width: 100%;
+    background-color: silver;
+    border-radius: 5px;
+}
+
+button{
+    margin:50px 100px;
+    height: 30px;
+    width: 120px;
+    border
+}
