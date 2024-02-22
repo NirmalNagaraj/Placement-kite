@@ -8,7 +8,7 @@ function CompanyForm() {
   const [date, setDate] = useState('');
   const [ctc, setCtc] = useState('');
   const [criteria, setCriteria] = useState('80%');
-
+  const [role, setRole] = useState('');
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -16,7 +16,8 @@ function CompanyForm() {
         name: companyName,
         date,
         ctc,
-        criteria
+        criteria,
+        role
       });
       alert('Data inserted successfully');
     } catch (error) {
@@ -66,6 +67,16 @@ function CompanyForm() {
               <MenuItem value="common">Common</MenuItem>
             </Select>
           </FormControl>
+        </div>
+        <div className='input-field'>
+          <TextField
+            type="text"
+            label="Role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            required
+            className='field'
+          />
         </div>
         <Button type="submit" variant="contained" color="primary">Submit</Button>
       </form>

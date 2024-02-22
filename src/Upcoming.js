@@ -41,6 +41,9 @@ function UpcomingPage() {
             <Typography color="textSecondary">
               Criteria: {company.criteria}
             </Typography>
+            <Typography color="textSecondary">
+              Role: {company.role}
+            </Typography>
           </CardContent>
         </Card>
       ))}

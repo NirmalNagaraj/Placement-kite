@@ -3,12 +3,14 @@ const mysql = require('mysql2');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const port = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -26,20 +28,19 @@ connection.connect((error) => {
 });
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.cookies.token;
   if (!token) {
-    alert("Unauthorized , login first");
-    return res.status(401).json({ error: 'No token provided' });
-    
+    console.log("No tokken");
   }
-  jwt.verify(token.split(' ')[1], 'secret_key', (err, decoded) => {
+  jwt.verify(token, 'secret_key', (err, decoded) => {
     if (err) {
-      return res.status(401).json({ error: 'Failed to authenticate token' });
+      return res.json(err);
     }
     req.user = decoded;
     next();
   });
 };
+
 app.use(bodyParser.json());
 
 app.get('/api/data', (req, res) => {
@@ -101,7 +102,11 @@ app.post('/login', (req, res) => {
     }
 
     const token = jwt.sign({ universityRollNumber: user.University_Roll_Number, name: user.Name }, 'secret_key', { expiresIn: '1h' });
-    res.json({ token });
+
+    // Set the JWT token as a cookie
+    res.cookie('token', token, { httpOnly: true, maxAge: 3600000 }); // Max age in milliseconds, here it's set to 1 hour
+
+    res.sendStatus(200); // Sending a simple OK response
   });
 });
 
@@ -115,17 +120,19 @@ app.get('/dashboard', verifyToken, (req, res) => {
   });
 });
 
+
+
 app.post('/company-data', (req, res) => {
-  const { name, date, ctc, criteria } = req.body;
-  const query = `INSERT INTO company_data (name, date, ctc, criteria) VALUES (?, ?, ?, ?)`;
-  connection.query(query, [name, date, ctc, criteria], (error, results, fields) => {
+  const { name, date, ctc, criteria, role } = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, criteria, role) VALUES (?, ?, ?, ?, ?)`;
+  connection.query(query, [name, date, ctc, criteria, role], (error, results, fields) => {
     if (error) throw error;
     res.send('Data inserted successfully');
   });
 });
 
 app.get('/upcoming', (req, res) => {
-  const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  const currentDate = new Date().toISOString().split('T')[0];
   connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
     if (error) {
       console.error('Error fetching upcoming company data:', error);
@@ -136,7 +143,7 @@ app.get('/upcoming', (req, res) => {
 });
 
 app.get('/previous', (req, res) => {
-  const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  const currentDate = new Date().toISOString().split('T')[0];
   connection.query('SELECT * FROM company_data WHERE date < ?', [currentDate], (error, results, fields) => {
     if (error) {
       console.error('Error fetching previous company data:', error);
@@ -146,8 +153,7 @@ app.get('/previous', (req, res) => {
   });
 });
 
-
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+ 

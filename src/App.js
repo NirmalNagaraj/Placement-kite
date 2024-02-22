@@ -8,6 +8,7 @@ import Dashboard from './Dashboard';
 import CompanyForm from './Company';
 import UpcomingPage from './Upcoming';
 import PreviousPage from './Previous';
+import FacultyLogin from './FacultyLogin';
 
 
 export default function App()  {
@@ -19,10 +20,11 @@ export default function App()  {
           <Route exact path="/report" element={<ReportPage />} />
           <Route exact path="/login" element={<Login />}/>
           <Route exact path="/dashboard" element={<Dashboard />}/>
-          <Route exact path="/dashboard/upcoming" element={<UpcomingPage />}/>
+          <Route exact path="/upcoming" element={<UpcomingPage />}/>
           <Route exact path="/previous" element={<PreviousPage />}/>
           <Route exact path="/add-company" element={<CompanyForm />}/>
-          <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />
+          <Route exact path="/faculty" element={<FacultyLogin />}/>
+          <Route  path="*" element={`404 - Page Not Found`} />
         </Routes>
       </div>
     </Router></>
