@@ -28,9 +28,7 @@ connection.connect((error) => {
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    alert("Unauthorized , login first");
     return res.status(401).json({ error: 'No token provided' });
-    
   }
   jwt.verify(token.split(' ')[1], 'secret_key', (err, decoded) => {
     if (err) {
@@ -106,33 +104,95 @@ app.post('/login', (req, res) => {
 });
 
 app.get('/dashboard', verifyToken, (req, res) => {
-  res.json({
-    message: 'Accessed dashboard successfully',
-    user: {
-      name: req.user.name,
-      universityRollNumber: req.user.universityRollNumber,
-    },
+  const eligibilityQuery = `
+    SELECT 
+      \`University Roll Number\`,
+      \`Marks -10th\`,
+      \`Marks -12th\`,
+      \`Aggregate %\`
+    FROM 
+      db
+    WHERE 
+      \`University Roll Number\` = ?
+  `;
+
+  connection.query(eligibilityQuery, [req.user.universityRollNumber], (error, eligibilityResults, fields) => {
+    if (error) {
+      console.error('Error fetching eligibility:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching eligibility data', originalError: error.message });
+    }
+
+    const eligibility = eligibilityResults[0];
+
+    // Check if user meets eligibility criteria (10th, 12th, CGPA above 60%)
+    if (
+      (eligibility['Marks -10th'] >= 60 &&
+      eligibility['Marks -12th'] >= 60 &&
+      eligibility['Aggregate %'] >= 6) || 
+      // Add condition for common criteria
+      eligibility['Aggregate %'] >= 0
+    ) {
+      // Fetch upcoming events
+      const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+      connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
+        if (error) {
+          console.error('Error fetching upcoming company data:', error);
+          return res.status(500).json({ error: 'An error occurred while fetching upcoming company data', originalError: error.message });
+        }
+        const upcomingEvents = results.filter((event) => {
+          // Check if the user meets the company criteria (80% or 60%)
+          return (
+            (event.criteria === 80 && eligibility['Aggregate %'] >= 8) ||
+            (event.criteria === 60 && eligibility['Aggregate %'] >= 6) ||
+            event.criteria === 'common'
+          );
+        });
+        res.json({
+          message: 'Accessed dashboard successfully',
+          user: {
+            name: req.user.name,
+            universityRollNumber: req.user.universityRollNumber,
+            tenthMarks: eligibility['Marks -10th'],
+            twelfthMarks: eligibility['Marks -12th'],
+            cgpa: eligibility['Aggregate %'],
+          },
+          upcomingEvents,
+        });
+      });
+    } else {
+      res.status(403).json({ error: 'User does not meet eligibility criteria for upcoming events' });
+    }
   });
 });
 
 app.post('/company-data', (req, res) => {
-  const { name, date, ctc, criteria } = req.body;
-  const query = `INSERT INTO company_data (name, date, ctc, criteria) VALUES (?, ?, ?, ?)`;
-  connection.query(query, [name, date, ctc, criteria], (error, results, fields) => {
+  const { name, date, ctc,role , criteria } = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria) VALUES (?, ?,?, ?, ?)`;
+  connection.query(query, [name, date, ctc, role,criteria], (error, results, fields) => {
     if (error) throw error;
     res.send('Data inserted successfully');
   });
 });
 
-app.get('/upcoming', (req, res) => {
+app.get('/upcoming', verifyToken, (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
-  connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
-    if (error) {
-      console.error('Error fetching upcoming company data:', error);
-      return res.status(500).json({ error: 'An error occurred while fetching upcoming company data' });
-    }
-    res.json(results);
-  });
+
+  // Check if user meets eligibility criteria (10th, 12th, CGPA above 60%)
+  if (
+    req.query.tenth >= 60 &&
+    req.query.twelfth >= 60 &&
+    req.query.cgpa >= 60
+  ) {
+    connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
+      if (error) {
+        console.error('Error fetching upcoming company data:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching upcoming company data', originalError: error.message });
+      }
+      res.json(results);
+    });
+  } else {
+    res.status(403).json({ error: 'User does not meet eligibility criteria for upcoming events' });
+  }
 });
 
 app.get('/previous', (req, res) => {

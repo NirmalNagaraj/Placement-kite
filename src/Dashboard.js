@@ -1,3 +1,4 @@
+// Dashboard.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -32,6 +33,26 @@ function Dashboard() {
           <p>{dashboardData.message}</p>
           <p>User: {dashboardData.user.name}</p>
           <p>University Roll Number: {dashboardData.user.universityRollNumber}</p>
+          <p>10th Marks: {dashboardData.user.tenthMarks}%</p>
+          <p>12th Marks: {dashboardData.user.twelfthMarks}%</p>
+          <p>CGPA: {dashboardData.user.cgpa}%</p>
+
+          {dashboardData.upcomingEvents && dashboardData.upcomingEvents.length > 0 ? (
+            <div>
+              <h3>Upcoming Events</h3>
+              {dashboardData.upcomingEvents.map((event) => (
+                <div key={event.id}>
+                  <p>Company: {event.name}</p>
+                  <p>Date: {event.date}</p>
+                  <p>CTC: {event.ctc}</p>
+                  <p>Role: {event.role}</p>
+                  <p>Criteria: {event.criteria}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p>No upcoming events</p>
+          )}
         </div>
       ) : (
         <p>Loading dashboard data...</p>
@@ -40,4 +61,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default Dashboard;

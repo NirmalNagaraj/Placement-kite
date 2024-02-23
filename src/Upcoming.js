@@ -39,6 +39,9 @@ function UpcomingPage() {
               CTC: {company.ctc}
             </Typography>
             <Typography color="textSecondary">
+              Criteria: {company.role}
+            </Typography>
+            <Typography color="textSecondary">
               Criteria: {company.criteria}
             </Typography>
           </CardContent>

@@ -7,6 +7,7 @@ function CompanyForm() {
   const [companyName, setCompanyName] = useState('');
   const [date, setDate] = useState('');
   const [ctc, setCtc] = useState('');
+  const [role, setRole] = useState('');
   const [criteria, setCriteria] = useState('80%');
 
   const handleSubmit = async (event) => {
@@ -16,6 +17,7 @@ function CompanyForm() {
         name: companyName,
         date,
         ctc,
+        role,
         criteria
       });
       alert('Data inserted successfully');
@@ -53,6 +55,16 @@ function CompanyForm() {
             label="CTC"
             value={ctc}
             onChange={(e) => setCtc(e.target.value)}
+            required
+            className='field'
+          />
+        </div>
+        <div className='input-field'>
+          <TextField
+            type="text"
+            label="role"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
             required
             className='field'
           />
