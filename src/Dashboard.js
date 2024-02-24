@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Dashboard.css'; // Import CSS file for styling
-
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import MailIcon from '@mui/icons-material/Mail';
+import PercentIcon from '@mui/icons-material/Percent';
+import SummarizeIcon from '@mui/icons-material/Summarize';
+import BadgeIcon from '@mui/icons-material/Badge';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import ComputerIcon from '@mui/icons-material/Computer';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import LinkIcon from '@mui/icons-material/Link';
+import LogoutButton from './Logout';
 
 function formatDate(dateString) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -68,33 +79,56 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
-      <h2 className="dashboard-title">Dashboard</h2> 
       {dashboardData ? (
-        <div className="user-info"> 
-          <p>{dashboardData.message}</p>
-          <p>User: {dashboardData.user.name}</p>
-          <p>University Roll Number: {dashboardData.user.universityRollNumber}</p>
-          <p>Email: {dashboardData.user.email}</p>
-          <p>Marks - 10th: {dashboardData.user.marks10th}</p>
-          <p>Marks - 12th: {dashboardData.user.marks12th}</p>
-          <p>Aggregate %: {dashboardData.user.aggregatePercentage}</p>
+      <div>
+        <div className='nav'>
+          {/* <h2 className="dashboard-title">K</h2> */}
+          <img src='' alt="logo"></img>
+          <div className='profile'>
+          <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
+          </div>
+        </div>
+        <div className='section'>
+          <div className='left-nav'>
+            <div className='dash-items'>
+              <a href="https://heartfelt-valkyrie-d1bafe.netlify.app/"><button>Edit Resume</button></a>
+              <a href="/previous">Previous Company</a>
+            </div>
+              <LogoutButton />
+            </div>
+          <div className="user-info">
+            <div className='user-details'>
+                <p className='personal-title'>{dashboardData.message}</p><hr/>
+                <div className='p '><BadgeIcon className='icon-color'/><p>{dashboardData.user.name}</p></div>
+                <div className='p'><HowToRegIcon className='icon-color'/><p>{dashboardData.user.universityRollNumber}</p></div>
+                <div className='p'><MailIcon className='icon-color'/><p>{dashboardData.user.email}</p></div>
+                <div className='p'><SummarizeIcon className='icon-color'/><p>{dashboardData.user.marks10th}</p></div>
+                <div className='p'><SummarizeIcon className='icon-color'/><p>{dashboardData.user.marks12th}</p></div>
+                <div className='p'><PercentIcon className='icon-color'/><p>{dashboardData.user.aggregatePercentage}</p></div>
+            </div> 
+
+            <h2 className="upcoming-title">Upcoming Company</h2>
+            <div className="upcoming-list"> 
+                {filteredUpcomingData.map(company => (
+                  <div key={company.id} className="company-card">
+                    <div className='p'><CorporateFareIcon fontSize='large'  className='icon-color'/><h3 class="h3">{company.name}</h3></div>
+                    <div className='p'><DateRangeIcon className='icon-color'/><p>{formatDate(company.date)}</p></div>
+                    <div className='p'><RequestPageIcon className='icon-color'/><p>{company.ctc}</p></div>
+                    <div className='p'><ComputerIcon className='icon-color'/><p>{company.role}</p></div>
+                    <div className='p'><PercentIcon className='icon-color'/><p>{company.criteria}</p></div>
+                    <div className='p'><LinkIcon className='icon-color'/><a href=''>Link</a></div>
+                  </div>
+                ))}
+            </div>  
+          </div>
+        </div>
+        
         </div>
       ) : (
-        <p>Loading dashboard data...</p>
+        <p>Unauthorized...</p>
       )}
 
-      <h2 className="upcoming-title">Upcoming Company Data</h2>
-      <div className="upcoming-list"> 
-        {filteredUpcomingData.map(company => (
-          <div key={company.id} className="company-card">
-            <h3>{company.name}</h3>
-            <p>Date: {formatDate(company.date)}</p>
-            <p>CTC: {company.ctc}</p>
-            <p>Role: {company.role}</p>
-            <p>Criteria: {company.criteria}</p>
-          </div>
-        ))}
-      </div>
+      
     </div>
   );
 }
