@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography } from '@mui/material';
+import './Previous.css'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CorporateFareIcon from '@mui/icons-material/CorporateFare';
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import RequestPageIcon from '@mui/icons-material/RequestPage';
+import PercentIcon from '@mui/icons-material/Percent';
+import ComputerIcon from '@mui/icons-material/Computer';
+import LogoutButton from './Logout';
+
 
 function PreviousPage() {
   const [previousCompanyData, setPreviousCompanyData] = useState([]);
+  const [dashboardData, setDashboardData] = useState(null);
 
   useEffect(() => {
     async function fetchPreviousCompanyData() {
@@ -14,8 +24,31 @@ function PreviousPage() {
         console.error('Error fetching previous company data:', error);
       }
     }
-    fetchPreviousCompanyData();
+
+    async function fetchDashboardData() {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get('http://localhost:3000/dashboard', {
+          headers: {
+            Authorization: token ? `Bearer ${token}` : '',
+          },
+        });
+
+        console.log(response);
+        setDashboardData(response.data);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error.response);
+      }
+    }
+
+    const fetchData = async () => {
+      await fetchDashboardData();
+      await fetchPreviousCompanyData();
+    };
+    
+    fetchData();
   }, []);
+    
 
   // Function to format date
   const formatDate = (dateString) => {
@@ -25,26 +58,75 @@ function PreviousPage() {
 
   return (
     <div>
-      <h2>Previous Company Data</h2>
-      {previousCompanyData.map((company) => (
-        <Card key={company.id} variant="outlined" style={{ marginBottom: '10px' }}>
-          <CardContent>
-            <Typography variant="h5" component="h2">
-              {company.name}
-            </Typography>
-            <Typography color="textSecondary">
-              Date: {formatDate(company.date)}
-            </Typography>
-            <Typography color="textSecondary">
-              CTC: {company.ctc}
-            </Typography>
-            <Typography color="textSecondary">
-              Criteria: {company.criteria}
-            </Typography>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+      {dashboardData ? (
+       <div className='nav'>
+          <img src='' alt="logo"></img>
+          <div className='profile'>
+          <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
+          </div>
+        </div>
+      ):(
+        <h1>Error</h1>
+      )}
+      
+        <div className='section'>
+          <div className='left-nav'>
+              <div className='dash-items'>
+                <a href="https://heartfelt-valkyrie-d1bafe.netlify.app/"><button>Edit Resume</button></a>
+                <a href="/dashboard">Dashboard</a>
+              </div>
+                <LogoutButton/>
+          </div>
+          <div className="user-info">
+              <h2 className='upcoming-title'>Previous Drives</h2>
+              <div className='upcoming-list'>
+                {previousCompanyData.map((company) => (
+                <Card key={company.id} variant="outlined" style={{ marginBottom: '10px' }}>
+                  <CardContent>
+                    <div className='p'>
+                      <CorporateFareIcon fontSize='large'  className='icon-color'/>
+                      <Typography variant="h5" component="h2">
+                        {company.name}
+                      </Typography>
+                    </div>
+                    <div className='p'>
+                      <DateRangeIcon className='icon-color'/>
+                      <Typography color="textSecondary">
+                        {formatDate(company.date)}
+                      </Typography>
+                    </div>
+                    <div className='p'>
+                      <RequestPageIcon className='icon-color'/>
+                      <Typography color="textSecondary">
+                        {company.ctc}
+                      </Typography>
+                    </div>
+                    <div className='p'>
+                      <PercentIcon className='icon-color'/>
+                      <Typography color="textSecondary">
+                        {company.criteria}
+                      </Typography>
+                    </div>
+                    <div className='p'>
+                      <ComputerIcon className='icon-color'/>
+                      <Typography color="textSecondary">
+                        {company.role}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+          ))}
+              </div>
+            
+
+          </div>
+        
+        </div>
+          
+
+      </div>
+    
+    
   );
 }
 

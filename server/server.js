@@ -106,6 +106,23 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.post('/faculty/login', (req, res) => {
+  console.log(req.body); // Check if the request body is received properly
+  const { username, password } = req.body;
+  const query = `SELECT * FROM faculty_login WHERE name = ? AND password = ?`;
+  connection.query(query, [username, password], (err, result) => {
+    if (err) {
+      res.status(500).send('Internal server error');
+      return;
+    }
+    if (result.length > 0) {
+      res.status(200).send({ message: 'Login successful' });
+    } else {
+      res.status(401).send({ error: 'Invalid credentials' });
+    }
+  });
+});
+
 app.get('/dashboard', verifyToken, (req, res) => {
   connection.query('SELECT `Marks -10th`, `Student Name`,`Marks -12th`, `Aggregate %`, `Email ID` FROM db WHERE `University Roll Number` = ?', [req.user.universityRollNumber], (error, results, fields) => {
     if (error) {
@@ -121,7 +138,7 @@ app.get('/dashboard', verifyToken, (req, res) => {
 
     // Send back the required user details
     res.json({
-      message: 'Accessed dashboard successfully',
+      message: 'Personal Details',
       user: {
         name: userData['Student Name'],
         universityRollNumber: req.user.universityRollNumber,

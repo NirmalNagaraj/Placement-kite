@@ -10,6 +10,8 @@ import UpcomingPage from './Upcoming';
 import PreviousPage from './Previous';
 import StudentForm from './CGPA';
 import PdfListPage from './GetPDF';
+import './App.css'
+import FacultyLogin from './FacultyLogin';
 
 
 export default function App()  {
@@ -21,6 +23,7 @@ export default function App()  {
           <Route exact path="/report" element={<ReportPage />} />
           <Route exact path="/login" element={<Login />}/>
           <Route exact path="/dashboard" element={<Dashboard />}/>
+          <Route exact path="/faculty" element={<FacultyLogin />}/>
           <Route exact path="/upcoming" element={<UpcomingPage />}/>
           <Route exact path="/previous" element={<PreviousPage />}/>
           <Route exact path="/add-company" element={<CompanyForm />}/>
