@@ -59,72 +59,73 @@ export default function ReportPage() {
   };
 
   return (
-    <div className="report-container" id="report">
-      <h1>Report</h1>
-      <div className="filter-options">
-        <div className="filter-row">
-          <TextField
-            type="number"
-            label="10th Marks"
-            value={filters.tenthMarks}
-            onChange={(e) => handleFilterChange(e, 'tenthMarks')}
-            placeholder="Enter value (0-100)"
-            max="100"
-          />
-          <TextField
-            type="number"
-            label="12th Marks"
-            value={filters.twelfthMarks}
-            onChange={(e) => handleFilterChange(e, 'twelfthMarks')}
-            placeholder="Enter value (0-100)"
-            max="100"
-          />
-        </div>
-        <div className="filter-row">
-          <TextField
-            type="number"
-            label="No. of Current Backlogs"
-            value={filters.currentBacklogs}
-            onChange={(e) => handleFilterChange(e, 'currentBacklogs')}
-            placeholder="Enter value"
-          />
-          <TextField
-            type="number"
-            label="CGPA"
-            value={filters.cgpa}
-            onChange={(e) => handleFilterChange(e, 'cgpa')}
-            placeholder="Enter value (0-10)"
-            max="10"
-          />
-        </div>
-        <Button onClick={handleDownloadPDF} variant="contained" color="primary">
-          Download PDF
-        </Button>
+   
+  <div className="report-container" id="report">
+    <h1>Report</h1>
+    <div className="filter-options">
+      <div className="filter-row">
+        <TextField
+          type="number"
+          label="10th Marks"
+          value={filters.tenthMarks}
+          onChange={(e) => handleFilterChange(e, 'tenthMarks')}
+          placeholder="Enter value (0-100)"
+          max="100"
+        />
+        <TextField
+          type="number"
+          label="12th Marks"
+          value={filters.twelfthMarks}
+          onChange={(e) => handleFilterChange(e, 'twelfthMarks')}
+          placeholder="Enter value (0-100)"
+          max="100"
+        />
       </div>
-      {error ? (
-        <p>{error}</p>
-      ) : (
-        <table className="roles-table">
-          <thead>
-            <tr>
-              <th>S NO</th>
-              <th>Student Name</th>
-              <th>Email</th>
-              <th>Mobile Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {students.map((student, index) => (
-              <tr key={index}>
-                <td>{student['Sl.No.']}</td>
-                <td>{student['Student Name']}</td>
-                <td>{student['Email ID']}</td>
-                <td>{student['Mobile Number']}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <div className="filter-row">
+        <TextField
+          type="number"
+          label="No. of Current Backlogs"
+          value={filters.currentBacklogs}
+          onChange={(e) => handleFilterChange(e, 'currentBacklogs')}
+          placeholder="Enter value"
+        />
+        <TextField
+          type="number"
+          label="CGPA"
+          value={filters.cgpa}
+          onChange={(e) => handleFilterChange(e, 'cgpa')}
+          placeholder="Enter value (0-10)"
+          max="10"
+        />
+      </div>
+      <Button onClick={handleDownloadPDF} variant="contained" color="primary">
+        Download PDF
+      </Button>
     </div>
+    {error ? (
+      <p>{error}</p>
+    ) : (
+      <table className="roles-table">
+        <thead>
+          <tr>
+             {students.length > 0 && Object.keys(students[0]).map((field, index) => (
+              <th key={index}>{field}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student, index) => (
+            <tr key={index}>
+              {Object.values(student).map((value, index) => (
+                <td key={index}>{value}</td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    )}
+  </div>
+
+
   );
 }
