@@ -8,6 +8,8 @@ import Dashboard from './Dashboard';
 import CompanyForm from './Company';
 import UpcomingPage from './Upcoming';
 import PreviousPage from './Previous';
+import StudentForm from './CGPA';
+import PdfListPage from './GetPDF';
 
 
 export default function App()  {
@@ -22,6 +24,8 @@ export default function App()  {
           <Route exact path="/upcoming" element={<UpcomingPage />}/>
           <Route exact path="/previous" element={<PreviousPage />}/>
           <Route exact path="/add-company" element={<CompanyForm />}/>
+          <Route exact path="/cgpa" element={<StudentForm />}/>
+           <Route exact path="/pdf" element={<PdfListPage />}/>
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />
         </Routes>
       </div>

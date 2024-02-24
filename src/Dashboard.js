@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Dashboard.css'; // Import CSS file for styling
+import LogoutButton from './Logout';
 
 
 function formatDate(dateString) {
@@ -78,6 +79,7 @@ function Dashboard() {
           <p>Marks - 10th: {dashboardData.user.marks10th}</p>
           <p>Marks - 12th: {dashboardData.user.marks12th}</p>
           <p>Aggregate %: {dashboardData.user.aggregatePercentage}</p>
+          <LogoutButton />
         </div>
       ) : (
         <p>Loading dashboard data...</p>
