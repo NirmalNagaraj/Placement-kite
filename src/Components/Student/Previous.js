@@ -8,8 +8,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import PercentIcon from '@mui/icons-material/Percent';
 import ComputerIcon from '@mui/icons-material/Computer';
-import LogoutButton from './Logout';
-import kite_logo from './images/kite_logo.png'
+import LogoutButton from '../../Logout';
 
 
 function PreviousPage() {
@@ -61,7 +60,7 @@ function PreviousPage() {
     <div>
       {dashboardData ? (
        <div className='nav'>
-          <img src={kite_logo} alt="logo" className='logo-kite'></img>
+          <img src='' alt="logo"></img>
           <div className='profile'>
           <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
           </div>

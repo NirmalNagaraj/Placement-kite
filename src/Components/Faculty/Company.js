@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Select, MenuItem, FormControl, InputLabel, Snackbar } from '@mui/material';
 import './Company.css';
-import InputText from './InputText';
-import InputNumber from './InputNumber'
+import InputText from '../../InputText';
+import InputNumber from '../../InputNumber';
 
 function CompanyForm() {
   const [companyName, setCompanyName] = useState('');
@@ -86,9 +86,9 @@ function CompanyForm() {
                   <InputLabel>Criteria</InputLabel>
                   <Select value={criteria} onChange={(e) => setCriteria(e.target.value)} className='field'>
 
-                    <MenuItem value="Overall 80%">Overall 80%</MenuItem>
-                    <MenuItem value="Overall 60%">Overall 60%</MenuItem>
-                    <MenuItem value="Common for All">Common for All</MenuItem>
+                    <MenuItem value="80%">Overall 80%</MenuItem>
+                    <MenuItem value="60%">Overall 60%</MenuItem>
+                    <MenuItem value="common">Common for All</MenuItem>
                   </Select>
                 </FormControl>
               </div>

@@ -5,8 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import './FacultyLogin.css';
 
 import axios from 'axios';
-import InputText from './InputText'
-import InputPass from './InputPass';
+import InputText from '../../InputText'
+import InputPass from '../../InputPass';
 
 
 function FacultyLogin() {

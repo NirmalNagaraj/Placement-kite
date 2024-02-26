@@ -1,6 +1,6 @@
 import React from 'react';
 import './CGPA.css'
-import Upload from './Upload';
+import UploadButton from '../../Upload';
 
 function StudentForm() {
   return (
@@ -17,7 +17,7 @@ function StudentForm() {
         </div>  
       </div> 
 
-      <Upload/>
+      <UploadButton/>
     </div>
     
   );

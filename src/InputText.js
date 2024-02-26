@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 
-function Input({ label, type }) {
+function InputText({ label, type }) {
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState(false);
   const maxLength = type === 'text' ? 30 : Infinity; // Set max length to 30 for type 'text'
@@ -30,4 +30,4 @@ function Input({ label, type }) {
   );
 }
 
-export default Input;
+export default InputText;
