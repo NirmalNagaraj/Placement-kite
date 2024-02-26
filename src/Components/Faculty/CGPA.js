@@ -1,54 +1,25 @@
-import React, { useState } from 'react';
-import { TextField, Button, Container, Box } from '@mui/material';
-import axios from 'axios';
+import React from 'react';
 import './CGPA.css'
+import UploadButton from '../../Upload';
 
 function StudentForm() {
-  const [universityRollNumber, setUniversityRollNumber] = useState('');
-  const [cgpa, setCgpa] = useState('');
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    try {
-      const response = await axios.post('http://localhost:3000/cgpa', {
-        universityRollNumber,
-        cgpa
-      });
-      console.log(response.data.message);
-      // Handle success, maybe show a success message to the user
-    } catch (error) {
-      console.error('Error updating Aggregate %:', error.response.data.error);
-      // Handle error, maybe show an error message to the user
-    }
-  };
-
   return (
-    <Container>
-      <form onSubmit={handleSubmit}>
-        <Box className="formContainer">
-          <TextField
-            label="University Roll Number"
-            type='number'
-            variant="outlined"
-            value={universityRollNumber}
-            onChange={(e) => setUniversityRollNumber(e.target.value)}
-            className="textField"
-          />
-          <TextField
-            label="CGPA"
-            variant="outlined"
-            type='float'
-            value={cgpa}
-            onChange={(e) => setCgpa(e.target.value)}
-            className="textField"
-          />
-          <Button variant="contained" color="primary" type="submit" className="button">
-            Submit
-          </Button>
-        </Box>
-      </form>
-    </Container>
+    <div>
+      <div className='instruction-section'>
+        <h1 className='file-title'>Upload CSV File</h1>
+        <div className='instruction'>
+          <h1>Note!!</h1>
+          <ul className='imp-list'>
+            <li>The Column name of the CSV file must be "University Roll Number" and "Aggregate %"</li>
+            <li>The Register number should be 12 number</li>
+            <li>The cgpa should contain 2 decimal points max !!</li>
+          </ul>  
+        </div>  
+      </div> 
+
+      <UploadButton/>
+    </div>
+    
   );
 }
 
