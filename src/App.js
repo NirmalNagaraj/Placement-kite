@@ -12,6 +12,9 @@ import StudentForm from './CGPA';
 import PdfListPage from './GetPDF';
 import './App.css'
 import FacultyLogin from './FacultyLogin';
+import ValidatePass from './ChangepassValidate';
+import OTPVerificationPage from './Otp';
+import ChangePasswordForm from './ChangePass';
 
 
 export default function App()  {
@@ -29,6 +32,11 @@ export default function App()  {
           <Route exact path="/add-company" element={<CompanyForm />}/>
           <Route exact path="/cgpa" element={<StudentForm />}/>
            <Route exact path="/pdf" element={<PdfListPage />}/>
+          <Route exact path="/validate-change" element={<ValidatePass />}/>
+           <Route exact path="/otp" element={<OTPVerificationPage />}/>
+           <Route exact path="/change" element={<ChangePasswordForm />}/>
+          
+
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />
         </Routes>
       </div>

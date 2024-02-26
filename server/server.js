@@ -6,9 +6,21 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const csvParser = require('csv-parser');
 const fs = require('fs');
+const twilio = require('twilio');
+const crypto = require('crypto');
+const { log } = require('console');
 
 const app = express();
 const port = 3000;
+const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
+const authToken = '79d6dc280bb9b624e281c721ab825b1c'; // Replace with your Twilio Auth Token
+const twilioClient = twilio(accountSid, authToken);
+const generateOTP = () => {
+  return crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates a 6-digit OTP (3 bytes * 2 characters per byte)
+};
+
+// Store generated OTPs in memory (replace with a database in production)
+const otpCache = {};
 
 app.use(cors());
 app.use(express.json());
@@ -31,7 +43,7 @@ connection.connect((error) => {
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
-    alert("Unauthorized , login first");
+    
     return res.status(401).json({ error: 'No token provided' });
     
   }
@@ -120,7 +132,7 @@ app.post('/faculty/login', (req, res) => {
     } else {
       res.status(401).send({ error: 'Invalid credentials' });
     }
-  });
+  }); 
 });
 
 app.get('/dashboard', verifyToken, (req, res) => {
@@ -279,7 +291,109 @@ app.get('/api/get-all-pdfs', (req, res) => {
   });
 });
 
+// Your existing dependencies and configurations...
 
+// Your existing MySQL connection...
+// Your existing JWT verification middleware...
+
+app.post('/validate', (req, res) => {
+  const { universityRollNumber, password } = req.body;
+  console.log('Roll Number:', universityRollNumber);
+  console.log('Password:', password);
+
+  // Query the database to check if the provided roll number and password match any records
+  connection.query('SELECT * FROM login_info WHERE University_Roll_Number = ?', [universityRollNumber], (error, results, fields) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: 'Invalid length university roll number or password' });
+    }
+
+    const user = results[0];
+
+    // Trim whitespace from both passwords
+    const trimmedDBPassword = user.Password.trim();
+    const trimmedProvidedPassword = password.trim();
+    console.log(`Original :${trimmedDBPassword} and Provided: ${trimmedProvidedPassword}`);
+
+    // Compare trimmed passwords
+    if (trimmedDBPassword !== trimmedProvidedPassword) {
+      console.log('Passwords do not match');
+      return res.status(401).json({ error: 'Invalid university roll number or password' });
+    }
+
+    // Passwords match, return success response
+    res.status(200).json({ message: 'Validation successful' });
+  });
+});
+
+
+app.post('/send-otp', (req, res) => {
+  const { mobileNumber } = req.body;
+  const otp = generateOTP();
+  
+  
+  otpCache[mobileNumber] = otp;
+
+  twilioClient.messages
+    .create({
+      body: `Your OTP is ${otp}`,
+      from: '+16503514109', // Replace with your Twilio phone number
+      to: mobileNumber
+    })
+    .then(message => {
+      console.log('OTP sent:', message.sid);
+      res.status(200).send('OTP sent successfully');
+    })
+    .catch(error => {
+      console.error('Error sending OTP:', error);
+      res.status(500).json({ error: 'Failed to send OTP' });
+    });
+});
+
+// Route to verify OTP
+app.post('/verify-otp', (req, res) => {
+  const { mobileNumber, otp } = req.body;
+
+  // Check if OTP exists in cache
+  if (!otpCache[mobileNumber]) {
+    return res.status(400).json({ error: 'OTP not sent or expired' });
+  }
+
+  // Verify OTP
+  if (otpCache[mobileNumber] === otp) {
+    // OTP is valid, clear it from cache (OTP can be used only once)
+    delete otpCache[mobileNumber];
+    res.status(200).send('OTP verified successfully');
+  } else {
+    // Invalid OTP
+    res.status(401).json({ error: 'Invalid OTP' });
+  }
+});
+
+app.post('/api/reset-password', verifyToken, (req, res) => {
+  const { newPassword, repeatPassword } = req.body;
+  const universityRollNumber = req.user.universityRollNumber;
+  console.log(universityRollNumber);
+  // Check if newPassword and repeatPassword match
+  if (newPassword !== repeatPassword) {
+    return res.status(400).json({ error: 'Passwords do not match' });
+  }
+
+  // Update the password in the database for the user
+  connection.query('UPDATE login_info SET Password = ? WHERE University_Roll_Number = ?', [newPassword, universityRollNumber], (error, results, fields) => {
+    if (error) {
+      console.error('Error updating password:', error);
+      return res.status(500).json({ error: 'An error occurred while updating password' });
+    }
+
+    // Password updated successfully
+    res.status(200).json({ message: 'Password updated successfully' });
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
