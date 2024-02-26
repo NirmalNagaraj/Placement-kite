@@ -12,7 +12,7 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import LinkIcon from '@mui/icons-material/Link';
-import LogoutButton from './Logout';
+import LogoutButton from '../../Logout';
 
 function formatDate(dateString) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };

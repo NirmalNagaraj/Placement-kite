@@ -8,7 +8,7 @@ import DateRangeIcon from '@mui/icons-material/DateRange';
 import RequestPageIcon from '@mui/icons-material/RequestPage';
 import PercentIcon from '@mui/icons-material/Percent';
 import ComputerIcon from '@mui/icons-material/Computer';
-import LogoutButton from './Logout';
+import LogoutButton from '../../Logout';
 
 
 function PreviousPage() {

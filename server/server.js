@@ -8,12 +8,12 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
-const { log } = require('console');
+
 
 const app = express();
 const port = 3000;
-const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
-const authToken = '79d6dc280bb9b624e281c721ab825b1c'; // Replace with your Twilio Auth Token
+const accountSid = 'AC4fc64cfb3d8e2901c7ad52c43daedffc'; // Replace with your Twilio Account SID
+const authToken = '87d1bf6bba5224ea3c8204df6a012254'; // Replace with your Twilio Auth Token
 const twilioClient = twilio(accountSid, authToken);
 const generateOTP = () => {
   return crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates a 6-digit OTP (3 bytes * 2 characters per byte)
@@ -30,7 +30,7 @@ const connection = mysql.createConnection({
   user: 'root',
   password: 'Beelzebub03',
   database: 'students_data',
-});
+}); 
 
 connection.connect((error) => {
   if (error) {
@@ -341,7 +341,7 @@ app.post('/send-otp', (req, res) => {
   twilioClient.messages
     .create({
       body: `Your OTP is ${otp}`,
-      from: '+16503514109', // Replace with your Twilio phone number
+      from: '+14012278724', // Replace with your Twilio phone number
       to: mobileNumber
     })
     .then(message => {

@@ -1,20 +1,21 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, } from 'react-router-dom';
-import ReportPage from './Report';
+import ReportPage from './Components/Faculty/Report';
 import Home from './Home';
-import Login from './Login';
-import Dashboard from './Dashboard';
-import CompanyForm from './Company';
-import UpcomingPage from './Upcoming';
-import PreviousPage from './Previous';
-import StudentForm from './CGPA';
+import Login from './Components/Student/Login';
+import Dashboard from './Components/Student/Dashboard';
+import CompanyForm from './Components/Faculty/Company';
+import UpcomingPage from './Components/Student/Upcoming';
+import PreviousPage from './Components/Student/Previous';
+import StudentForm from './Components/Faculty/CGPA';
 import PdfListPage from './GetPDF';
 import './App.css'
-import FacultyLogin from './FacultyLogin';
-import ValidatePass from './ChangepassValidate';
+import FacultyLogin from './Components/Faculty/FacultyLogin';
+import ValidatePass from './Components/Student/ChangepassValidate';
 import OTPVerificationPage from './Otp';
-import ChangePasswordForm from './ChangePass';
+import ChangePasswordForm from './Components/Student/ChangePass';
+
 
 
 export default function App()  {

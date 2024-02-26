@@ -89,9 +89,9 @@ function CompanyForm() {
                   <InputLabel>Criteria</InputLabel>
                   <Select value={criteria} onChange={(e) => setCriteria(e.target.value)} className='field'>
 
-                    <MenuItem value="Overall 80%">Overall 80%</MenuItem>
-                    <MenuItem value="Overall 60%">Overall 60%</MenuItem>
-                    <MenuItem value="Common for All">Common for All</MenuItem>
+                    <MenuItem value="80%">Overall 80%</MenuItem>
+                    <MenuItem value="60%">Overall 60%</MenuItem>
+                    <MenuItem value="common">Common for All</MenuItem>
                   </Select>
                 </FormControl>
               </div>
