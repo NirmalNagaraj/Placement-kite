@@ -1,14 +1,66 @@
-.formContainer {
+.instruction-section{
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-  margin: auto;
+  justify-content: center;
+  align-items: center;
 }
 
-.textField {
-  margin-bottom: 16px;
+.file-title{
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 3px;
+  padding: 10px;
 }
 
-.button {
-  margin-top: 16px;
+.instruction{
+  margin:30px 30px 30px 30px;
+  padding:30px 60px;
+  border: 1px solid red;
+  background-color: rgba(255, 0, 0, 0.225);
+  box-shadow: rgba(0, 0, 0, 0.314) 0px 0px 10px 0px;
 }
+
+.imp-list{
+  font-size: large;
+  letter-spacing:4px;
+  font-weight: 500;
+}
+
+.imp-list > li{
+  padding-top:10px;
+}
+
+.upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  cursor: pointer;
+}
+
+.up-file{
+  border: 2px dashed #ccc;
+  width: 90vh;
+  height: 40vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.up-file:hover{
+  background-color: #f0f0f0;
+}
+
+.up-file #file-input{
+  display: none;
+ }
+  
+.up-file>label{
+  color: black;
+}
+
+.up-file>label:hover{
+  background-color:#f0f0f0;
+  font-weight: 700;
+}
+
+

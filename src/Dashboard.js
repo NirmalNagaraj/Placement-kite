@@ -13,6 +13,7 @@ import RequestPageIcon from '@mui/icons-material/RequestPage';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import LinkIcon from '@mui/icons-material/Link';
 import LogoutButton from './Logout';
+import kite_logo from './images/kite_logo.png'
 
 function formatDate(dateString) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -83,7 +84,7 @@ function Dashboard() {
       <div>
         <div className='nav'>
           {/* <h2 className="dashboard-title">K</h2> */}
-          <img src='' alt="logo"></img>
+          <img src={kite_logo} alt="logo" className='logo-kite'></img>
           <div className='profile'>
           <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
           </div>
