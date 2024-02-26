@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Select, MenuItem, FormControl, InputLabel, Snackbar } from '@mui/material';
 import './Company.css';
+import InputText from './InputText';
+import InputNumber from './InputNumber'
 
 function CompanyForm() {
   const [companyName, setCompanyName] = useState('');
@@ -42,9 +44,9 @@ function CompanyForm() {
             <h2>Company Form</h2>
             <form onSubmit={handleSubmit} className='form-container'>
               <div className='input-field'>
-                <TextField
-                  fullWidth
+                <InputText
                   label="Company Name"
+                  type = "text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   required
@@ -63,21 +65,16 @@ function CompanyForm() {
                 />
               </div>
               <div className='input-field'>
-                <TextField
-                  fullWidth
-                  type="number"
+                <InputNumber
                   label="CTC"
                   value={ctc}
-                  onChange={(e) => setCtc(e.target.value)}
-                  required
-                  className='field'
+                  onChange={(value) => setCtc(value)}
                 />
               </div>
               <div className='input-field'>
-                <TextField
-                  fullWidth
-                  type="text"
+                <InputText
                   label="Role"
+                  type = "text"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   required
