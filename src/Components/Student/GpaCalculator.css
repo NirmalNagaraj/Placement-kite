@@ -1,0 +1,60 @@
+
+.cgpa-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+
+  .cgpa-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+  }
+  .select-label{
+    padding: 30px 0;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .input-section {
+    margin-bottom: 15px;
+  }
+  
+
+  .subject-section {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 15px;
+    font-family: "Poppins", sans-serif;
+  }
+  
+  .subject-section h2 option {
+    margin-bottom: 10px;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .select-tag {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+
+  .calculateBtn {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .calculateBtn:hover {
+    background-color: #0056b3;
+  }
+  

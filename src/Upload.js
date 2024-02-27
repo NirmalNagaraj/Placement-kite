@@ -45,7 +45,7 @@ function UploadButton() {
         <label for="file-input"> Choose file</label>
       </div>
       <div className='upBtn'>
-        <button onClick={handleUpload}>upload</button>
+        <button onClick={handleUpload}>Upload</button>
       </div>
     </div>
   );
