@@ -1,16 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import { useNavigate } from 'react-router-dom';
+import './ChangePass.css'
 
 const ChangePasswordForm = () => {
   const [newPassword, setNewPassword] = useState('');
   const [repeatPassword, setRepeatPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const handleOpenSnackbar = () => {
+    setOpenSnackbar(true);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (newPassword !== repeatPassword) {
       setErrorMessage('Passwords do not match');
+      handleOpenSnackbar();
       return;
     }
 
@@ -28,20 +44,34 @@ const ChangePasswordForm = () => {
 
       if (response.status === 200) {
         // Password reset successful
-        // You can redirect the user to a success page or perform any other action
-        console.log('Password reset successful');
+        setSuccessMessage('Password reset successful');
+        handleOpenSnackbar();
+        setNewPassword('');
+        setRepeatPassword('');
+        navigate('/login');
       }
     } catch (error) {
       console.error('Error resetting password:', error);
       setErrorMessage('Failed to reset password');
+      handleOpenSnackbar();
     }
   };
 
   return (
-    <div>
-      <h2>Reset Password</h2>
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+    <div className='form-container'>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        {successMessage ? (
+          <MuiAlert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+            {successMessage}
+          </MuiAlert>
+        ) : (
+          <MuiAlert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+            {errorMessage}
+          </MuiAlert>
+        )}
+      </Snackbar>
       <form onSubmit={handleSubmit}>
+        <h2>Reset Password</h2>
         <div>
           <label>New Password:</label>
           <input

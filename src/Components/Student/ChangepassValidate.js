@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Import Axios
+import './ChnageValidate.css'
 
 function ValidatePass() {
   const [universityRollNumber, setuniversityRollNumber] = useState('');
@@ -25,26 +26,29 @@ function ValidatePass() {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>University Roll Number:</label>
-        <input
-          type="text"
-          value={universityRollNumber}
-          onChange={(e) => setuniversityRollNumber(e.target.value)}
-        />
-      </div>
-      <div>
-        <label>Password:</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      <button type="submit">Submit</button>
-      <a href='/otp'>Forgot password?</a>
-    </form>
+    <div className='form-container'>
+  <form onSubmit={handleSubmit}>
+    <div>
+      <label>University Roll Number:</label>
+      <input
+        type="text"
+        value={universityRollNumber}
+        onChange={(e) => setuniversityRollNumber(e.target.value)}
+      />
+    </div>
+    <div>
+      <label>Password:</label>
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+    </div>
+    <button type="submit">Submit</button>
+    <a href='/otp'>Forgot password?</a>
+  </form>
+</div>
+
   );
 }
 

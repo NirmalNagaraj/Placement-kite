@@ -3,8 +3,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './FacultyLogin.css';
-import TextField from '@mui/material/TextField';
+
 import axios from 'axios';
+import InputText from '../../InputText'
+import InputPass from '../../InputPass';
 
 
 function FacultyLogin() {
@@ -34,25 +36,19 @@ function FacultyLogin() {
         <div className='form-group'>
           <h1>Faculty Login</h1>
           <form onSubmit={handleSubmit}>
-            <TextField
-              helperText=""
-              fullWidth
-              required
-              type='text'
+            <InputText
               label="User name"
+              type='text'
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
 
-            <TextField
-              helperText=""
-              fullWidth
-              required
-              type='password'
+            <InputPass // Replace TextField with InputPass component
               label="Enter password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(value) => setPassword(value)}
             />
+            
             <button type='submit' className='logBtn'>Login</button>
           </form>
         </div>

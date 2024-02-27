@@ -94,6 +94,7 @@ function Dashboard() {
               <a href="https://heartfelt-valkyrie-d1bafe.netlify.app/"><button>Edit Resume</button></a>
               <a href="/previous">Previous Company</a>
               <a href="/validate-change">Change Password</a>
+              <a href="/gpa">Gpa Calculator</a>
             </div>
               <LogoutButton />
             </div>
