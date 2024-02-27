@@ -1,0 +1,28 @@
+.placed-students-container {
+  margin: 20px;
+}
+
+.placed-students-container h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.placed-students-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.placed-students-table th,
+.placed-students-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.placed-students-table th {
+  background-color: #f2f2f2;
+}
+
+.placed-students-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}

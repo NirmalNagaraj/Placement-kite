@@ -5,6 +5,7 @@ import UploadButton from '../../Upload';
 function StudentForm() {
   return (
     <div>
+      
       <div className='instruction-section'>
         <h1 className='file-title'>Upload CSV File</h1>
         <div className='instruction'>

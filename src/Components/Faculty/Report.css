@@ -6,6 +6,73 @@
 
 .filter-options {
   margin-bottom: 20px;
+}.report-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.filter-options {
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.filter-row label {
+  margin-right: 10px;
+}
+
+button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.roles-table th,
+.roles-table td {
+  border: 1px solid #dddddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.roles-table th {
+  background-color: #f2f2f2;
+}
+
+.roles-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.roles-table tr:hover {
+  background-color: #f2f2f2;
+}
+
+.roles-table th:first-child,
+.roles-table td:first-child {
+  border-left: none;
+}
+
+.roles-table th:last-child,
+.roles-table td:last-child {
+  border-right: none;
 }
 
 .filter-row {
