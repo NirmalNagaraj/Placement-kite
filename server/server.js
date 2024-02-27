@@ -12,8 +12,8 @@ const crypto = require('crypto');
 
 const app = express();
 const port = 3000;
-const accountSid = 'AC4fc64cfb3d8e2901c7ad52c43daedffc'; // Replace with your Twilio Account SID
-const authToken = '87d1bf6bba5224ea3c8204df6a012254'; // Replace with your Twilio Auth Token
+const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
+const authToken = '644fa9b6b1a41109be35871bb29b99fa'; // Replace with your Twilio Auth Token
 const twilioClient = twilio(accountSid, authToken);
 const generateOTP = () => {
   return crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates a 6-digit OTP (3 bytes * 2 characters per byte)
@@ -167,9 +167,9 @@ app.get('/dashboard', verifyToken, (req, res) => {
 
 
 app.post('/company-data', (req, res) => {
-  const { name, date, ctc, role ,criteria } = req.body;
-  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria) VALUES (?,?, ?, ?, ?)`;
-  connection.query(query, [name, date, ctc, role ,criteria], (error, results, fields) => {
+  const { name, date, ctc, role ,criteria ,link } = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria ,link) VALUES (?,?, ?, ?, ? ,?)`;
+  connection.query(query, [name, date, ctc, role ,criteria , link], (error, results, fields) => {
     if (error) throw error;
     res.send('Data inserted successfully');
   });
@@ -185,6 +185,38 @@ app.get('/upcoming', (req, res) => {
     res.json(results);
   });
 });
+app.get('/api/question-bank/:companyName', (req, res) => {
+  const { companyName } = req.params;
+
+  // Query to fetch the PDF blob data from the database
+  const sql = 'SELECT pdf_data FROM company_data WHERE name = ?';
+  connection.query(sql, [companyName], (error, results) => {
+    if (error) {
+      console.error('Error fetching PDF data:', error);
+      res.status(500).json({ error: 'Failed to fetch PDF data' });
+      return;
+    }
+
+    // Check if any results were returned
+    if (results.length === 0 || !results[0].pdf_data) {
+      res.status(404).json({ error: 'PDF data not found for the company' });
+      return;
+    }
+
+    // Retrieve the PDF blob data from the query results
+    const pdfBlobData = results[0].pdf_data;
+
+    // Convert the blob data into a buffer
+    const pdfBuffer = Buffer.from(pdfBlobData, 'binary');
+    console.log( pdfBuffer);
+   
+    // Send the PDF buffer as a response
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(pdfBuffer);
+    console.log( "Res",pdfBuffer);
+  });
+});
+
 
 app.get('/previous', (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
@@ -258,43 +290,51 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     });
 });
 
-app.post('/api/upload-pdf', (req, res) => {
-  const { filename, mimeType, data } = req.body; // Assuming you're sending filename, mimeType, and data in the request body
-
-  // Insert the PDF data into the database
-  const sql = 'INSERT INTO pdf_documents (filename, mime_type, data) VALUES (?, ?, ?)';
-  connection.query(sql, [filename, mimeType, data], (err, result) => {
+app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
+  const { companyName } = req.body;
+  const pdfPath = req.file.path;
+  console.log(companyName , pdfPath);
+  // Read the PDF file
+  fs.readFile(pdfPath, (err, data) => {
     if (err) {
-      console.error('Error inserting PDF data:', err);
-      res.status(500).json({ error: 'Failed to upload PDF' });
-      return;
+      console.error('Error reading PDF file:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF' });
     }
-    console.log('PDF uploaded successfully');
-    res.status(200).json({ message: 'PDF uploaded successfully' });
+
+    // Update PDF data in the database based on the company name
+    const sql = 'UPDATE company_data SET pdf_data = ? WHERE name = ?';
+    connection.query(sql, [data, companyName], (err, result) => {
+      if (err) {
+        console.error('Error updating PDF data:', err);
+        return res.status(500).json({ error: 'Failed to update PDF data' });
+      }
+      console.log('PDF data updated successfully');
+      res.status(200).json({ message: 'PDF data updated successfully' });
+    });
   });
 });
 
-// Route to fetch all PDF documents from the database
-app.get('/api/get-all-pdfs', (req, res) => {
-  // Query to retrieve all PDF data from the database
-  const sql = 'SELECT id, filename, mime_type FROM pdf_documents';
 
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching PDFs from database:', err);
-      res.status(500).json({ error: 'Failed to fetch PDFs from database' });
-      return;
-    }
 
-    // Send the PDF data to the client
-    res.json(results);
-  });
-});
+// // Route to fetch all PDF documents from the database
+// app.get('/api/get-all-pdfs', (req, res) => {
+//   // Query to retrieve all PDF data from the database
+//   const sql = 'SELECT * FROM pdf_documents';
 
-// Your existing dependencies and configurations...
+//   connection.query(sql, (err, results) => {
+//     if (err) { 
+//       console.error('Error fetching PDFs from database:', err);
+//       res.status(500).json({ error: 'Failed to fetch PDFs from database' });
+//       return;
+//     }
 
-// Your existing MySQL connection...
-// Your existing JWT verification middleware...
+//     // Send the PDF data to the client
+//     res.json(results);
+//   });
+// });
+
+
+
 
 app.post('/validate', (req, res) => {
   const { universityRollNumber, password } = req.body;
@@ -341,7 +381,7 @@ app.post('/send-otp', (req, res) => {
   twilioClient.messages
     .create({
       body: `Your OTP is ${otp}`,
-      from: '+14012278724', // Replace with your Twilio phone number
+      from: '++16503514109', // Replace with your Twilio phone number
       to: mobileNumber
     })
     .then(message => {

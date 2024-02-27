@@ -117,7 +117,7 @@ function Dashboard() {
                     <div className='p'><RequestPageIcon className='icon-color'/><p>{company.ctc}</p></div>
                     <div className='p'><ComputerIcon className='icon-color'/><p>{company.role}</p></div>
                     <div className='p'><PercentIcon className='icon-color'/><p>{company.criteria}</p></div>
-                    <div className='p'><LinkIcon className='icon-color'/><a href=''>Link</a></div>
+                    <div className='p'><LinkIcon className='icon-color'/><a href={company.link} target='blank'>Apply link</a></div>
                   </div>
                 ))}
             </div>  
