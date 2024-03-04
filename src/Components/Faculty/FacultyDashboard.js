@@ -54,9 +54,7 @@ export default function FacultyDashboard() {
           <li>
             <NavLink to="/update-company" activeClassName="faculty-active">Update Company</NavLink>
           </li>
-          <li>
-            <NavLink to="/placed" activeClassName="faculty-active">Placed</NavLink>
-          </li>
+          
           <li>
             <NavLink to="/student-info" activeClassName="faculty-active">Info</NavLink>
           </li>

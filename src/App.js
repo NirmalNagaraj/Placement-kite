@@ -20,6 +20,9 @@ import UploadPDF from './UploadPDF';
 import PlacementForm from './Components/Faculty/Placed';
 import PlacedStudents from './Components/Faculty/StudentPlaced';
 import StudentInfoPage from './Components/Faculty/StudentInfo';
+import UserDetailsPage from './Components/Student/UserDetails';
+import UserDetails from './Components/Student/Details';
+import UploadOfferLetter from './Components/Student/OfferLetter';
 
 
 
@@ -46,6 +49,10 @@ export default function App()  {
            <Route exact path="/placed" element={<PlacementForm />}/>
            <Route path="/students-placed" element={<PlacedStudents />} />
            <Route path="/student-info" element={<StudentInfoPage />} />
+           <Route path="/userDetails" element={<UserDetailsPage />} />
+           <Route path="/Details" element={<UserDetails />} />
+           <Route path="/offerLetter" element={<UploadOfferLetter />} />
+          
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />
         </Routes>
       </div>

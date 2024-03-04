@@ -51,8 +51,9 @@ const verifyToken = (req, res, next) => {
     if (err) {
       return res.status(401).json({ error: 'Failed to authenticate token' });
     }
+    console.log(decoded);
     req.user = decoded;
-    next();
+    next(); 
   });
 };
 app.use(bodyParser.json());
@@ -141,7 +142,7 @@ app.post('/faculty/login', (req, res) => {
 });
 
 app.get('/dashboard', verifyToken, (req, res) => {
-  connection.query('SELECT `Marks -10th`, `Student Name`,`Marks -12th`, `Aggregate %`, `Email ID` FROM db WHERE `University Roll Number` = ?', [req.user.universityRollNumber], (error, results, fields) => {
+  connection.query('SELECT `Marks10`, `Name`,`Marks12orDiploma`, `CGPA` FROM UserDetails WHERE `RegisterNumber` = ?', [req.user.universityRollNumber], (error, results, fields) => {
     if (error) {
       console.error('Error executing query:', error);
       return res.status(500).json({ error: 'An error occurred while fetching user data' });
@@ -157,19 +158,39 @@ app.get('/dashboard', verifyToken, (req, res) => {
     res.json({
       message: 'Personal Details',
       user: {
-        name: userData['Student Name'],
+        name: userData['Name'],
         universityRollNumber: req.user.universityRollNumber,
         // Include additional user details from the db table
-        marks10th: userData['Marks -10th'],
-        marks12th: userData['Marks -12th'],
-        aggregatePercentage: userData['Aggregate %'],
-        email: userData['Email ID'],
+        marks10th: userData['Marks10'],
+        marks12th: userData['Marks12orDiploma'],
+        aggregatePercentage: userData['CGPA'],
+
         // Add more details as needed
       },
     });
   });
 });
 
+app.get('/personal-details', verifyToken, (req, res) => {
+  const registerNumber = req.user.universityRollNumber;
+  connection.query('SELECT * FROM UserDetails WHERE RegisterNumber = ?', [registerNumber], (error, results, fields) => {
+    if (error) {
+      console.error('Error executing query:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching user data' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User data not found' });
+    }
+
+    const userData = results[0];
+
+    // Send back the user details
+    res.json({
+      userDetails: userData
+    });
+  });
+});
 
 app.post('/company-data', (req, res) => {
   const { name, date, ctc, role ,criteria ,link } = req.body;
@@ -274,6 +295,7 @@ app.get('/students-placed', (req, res) => {
 app.get('/students/info', (req, res) => {
   
   const universityRollNumber = req.query.universityRollNumber; 
+   
 
   // Fetch details from the db table based on the university number
   const query = `
@@ -306,6 +328,67 @@ app.get('/students/info', (req, res) => {
     });
   });
 });
+
+app.post('/userDetails', verifyToken, (req, res) => {
+  const {
+    name, gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
+    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
+  } = req.body;
+
+  // Extract RegisterNumber from decoded JWT token
+  const { universityRollNumber } = req.user;
+  console.log(universityRollNumber);
+
+  // Your SQL query to insert data into the UserDetails table
+  const query = `
+    INSERT INTO UserDetails (RegisterNumber, Name, Gender, Branch, Marks10, ModeOfStudy, Marks12orDiploma,
+      CGPA, Backlogs, HistoryOfArrears, MobileNumber, Email,Residence, Address,
+      Degree, YearOfPassing)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `; 
+  const values = [
+    universityRollNumber, name,gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
+    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
+  ];
+  console.log(values);
+  // Execute the SQL query to insert user details
+  connection.query(query, values, (error, results, fields) => {
+    if (error) {
+      console.error('Error inserting user details:', error);
+      return res.status(500).json({ error: 'An error occurred while inserting user details' });
+    }
+    res.json({ success: true });
+  });
+});
+
+app.get('/verify-user',verifyToken, (req, res) => {
+  // Extract universityRollNumber from request headers
+  const { universityRollNumber } = req.user;
+
+  // Check if universityRollNumber is present
+  if (!universityRollNumber) {
+    return res.status(400).json({ error: 'University Roll Number not provided' });
+  }
+
+  // Query to check if universityRollNumber exists in UserDetails table
+  const query = 'SELECT * FROM UserDetails WHERE RegisterNumber = ?';
+  connection.query(query, [universityRollNumber], (error, results, fields) => {
+    if (error) {
+      console.error('Error verifying user:', error);
+      return res.status(500).json({ error: 'An error occurred while verifying user' });
+    }
+
+    // Check if user exists
+    if (results.length > 0) {
+      // User exists, send success response
+      res.status(200).json({ verified: true });
+    } else {
+      // User does not exist, send failure response
+      res.status(404).json({ verified: false });
+    }
+  });
+});
+
 
 app.get('/upcoming', (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
