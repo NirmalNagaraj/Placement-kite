@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-
 function UploadButton() {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -39,14 +38,10 @@ function UploadButton() {
   };
 
   return (
-    <div className='upload'>
-      <div className='up-file'>
-        <input type="file" onChange={handleFileChange} accept=".csv" id="file-input"/>
-        <label for="file-input"> Choose file</label>
-      </div>
-      <div className='upBtn'>
-        <button onClick={handleUpload}>Upload</button>
-      </div>
+    <div>
+      <h2>Upload CSV File</h2>
+      <input type="file" onChange={handleFileChange} accept=".csv" />
+      <button onClick={handleUpload}>Upload</button>
     </div>
   );
 }

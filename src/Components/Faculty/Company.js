@@ -11,6 +11,7 @@ function CompanyForm() {
   const [ctc, setCtc] = useState('');
   const [role, setRole] = useState('');
   const [criteria, setCriteria] = useState('80%');
+  const [link, setLink] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
   const handleSubmit = async (event) => {
@@ -21,7 +22,8 @@ function CompanyForm() {
         date,
         ctc,
         role,
-        criteria
+        criteria,
+        link
       });
       setSnackbarOpen(true); // Open the Snackbar on successful submission
     } catch (error) {
@@ -92,6 +94,17 @@ function CompanyForm() {
                   </Select>
                 </FormControl>
               </div>
+              <div className='input-field'>
+                <TextField
+                  fullWidth
+                  type="text"
+                  label="Link"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
+                  
+                  className='field'
+                />
+                </div>
               <button type="submit" variant="contained" className='logBtn'>Submit</button>
             </form>
         </div>

@@ -12,8 +12,8 @@ const crypto = require('crypto');
 
 const app = express();
 const port = 3000;
-const accountSid = 'AC4fc64cfb3d8e2901c7ad52c43daedffc'; // Replace with your Twilio Account SID
-const authToken = '87d1bf6bba5224ea3c8204df6a012254'; // Replace with your Twilio Auth Token
+const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
+const authToken = '644fa9b6b1a41109be35871bb29b99fa'; // Replace with your Twilio Auth Token
 const twilioClient = twilio(accountSid, authToken);
 const generateOTP = () => {
   return crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates a 6-digit OTP (3 bytes * 2 characters per byte)
@@ -58,21 +58,29 @@ const verifyToken = (req, res, next) => {
 app.use(bodyParser.json());
 
 app.get('/api/data', (req, res) => {
-   const tenthValue = parseFloat(req.query.tenth) || 0;
+  const tenthValue = parseFloat(req.query.tenth) || 0;
   const twelfthValue = parseFloat(req.query.twelfth) || 0;
   const currentBacklogsValue = parseInt(req.query.backlogs) || 0;
   const cgpaValue = parseFloat(req.query.cgpa) || 0;
-  const query = `
-    SELECT *
-    FROM db
-    WHERE 
-      (\`Marks -10th\` >= 0)
-      AND (\`Marks -12th\` >= 0)
-      AND (\`No. of current backlogs\` <= ?)
-      AND (\`Aggregate %\` >= 0)
-  `;
-    const values = [tenthValue,  twelfthValue,  currentBacklogsValue, cgpaValue];
 
+  const query = `
+    SELECT 
+      \`Sl.No.\`,
+      \`Student Name\`, 
+      \`Email ID\`, 
+      \`Mobile Number\`,
+      \`Marks -12th\` 
+    FROM 
+      db
+    WHERE 
+      (\`Marks -10th\` >= ? OR ? = 0)
+      AND (\`Marks -12th\` >= ? OR ? = 0)
+      AND (\`No. of current backlogs\` <= ?)
+      AND (\`Aggregate %\` >= ? OR ? = 0)
+  `;
+   const values = [tenthValue, tenthValue, twelfthValue, twelfthValue, currentBacklogsValue, cgpaValue, cgpaValue];
+
+ 
   connection.query(query, values, (error, results, fields) => {
     if (error) {
       console.error('Error executing query:', error);
@@ -82,9 +90,6 @@ app.get('/api/data', (req, res) => {
     res.json(results);
   });
 });
-
-
-
 
 
 
@@ -167,11 +172,138 @@ app.get('/dashboard', verifyToken, (req, res) => {
 
 
 app.post('/company-data', (req, res) => {
-  const { name, date, ctc, role ,criteria } = req.body;
-  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria) VALUES (?,?, ?, ?, ?)`;
-  connection.query(query, [name, date, ctc, role ,criteria], (error, results, fields) => {
+  const { name, date, ctc, role ,criteria ,link } = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria ,link) VALUES (?,?, ?, ?, ? ,?)`;
+  connection.query(query, [name, date, ctc, role ,criteria , link], (error, results, fields) => {
     if (error) throw error;
     res.send('Data inserted successfully');
+  });
+});
+
+app.post('/hiring-update', (req, res) => {
+  const { companyName,hiring  } = req.body;
+
+  // Update the hired value in the company_data table
+  const sql = 'UPDATE company_data SET hired = ? WHERE name =?' ;
+  connection.query(sql, [hiring , companyName], (error, results) => {
+    if (error) {
+      console.error('Error updating hired value:', error);
+      res.status(500).json({ error: 'Failed to update hired value' });
+      return;
+    }
+
+    console.log('Hiring value updated successfully');
+    res.status(200).json({ message: 'Hiring value updated successfully' });
+  });
+});
+app.get('/hiring-count', (req, res) => {
+  // Query to calculate the sum of the hiring field value in the company_data table
+  const sql_students = 'SELECT COUNT(`University Roll Number`) AS totalCount FROM db';
+  const sql = 'SELECT SUM(hired) AS totalHiring FROM company_data';
+
+  connection.query(sql, (error1, results1) => {
+    if (error1) {
+      console.error('Error fetching hiring count:', error1);
+      res.status(500).json({ error: 'Failed to fetch hiring count' });
+      return;
+    }
+
+    // Execute the second query after the first one completes
+    connection.query(sql_students, (error2, results2) => {
+      if (error2) {
+        console.error('Error fetching total count:', error2);
+        res.status(500).json({ error: 'Failed to fetch total count' });
+        return;
+      }
+
+      // Extract the total hiring count from the first query results
+      const totalHiring = results1[0].totalHiring;
+
+      // Extract the total count from the second query results
+      const totalCount = results2[0].totalCount;
+
+      // Send both counts as a response
+      res.status(200).json({ totalHiring, totalCount });
+      console.log('Total hiring count:', totalHiring);
+      console.log('Total count:', totalCount);
+    });
+  });
+});
+
+app.post('/placement-info', (req, res) => {
+    const { companyName, studentInfo } = req.body;
+
+    // Insert student placement info into placed_info table
+    const query = 'INSERT INTO placed_info (university_number, company_name, role, ctc) VALUES (?, ?, ?, ?)';
+    studentInfo.forEach(async (student) => {
+        try {
+            await new Promise((resolve, reject) => {
+                connection.query(query, [student.studentNumber, companyName, student.role, student.ctc], (error, results) => {
+                    if (error) {
+                        console.error('Error inserting student placement info:', error);
+                        reject(error);
+                    } else {
+                        resolve(results);
+                    }
+                });
+            });
+        } catch (error) {
+            res.status(500).json({ error: 'Internal server error' });
+            return;
+        }
+    });
+
+    res.status(200).json({ message: 'Student placement info inserted successfully' });
+});
+app.get('/students-placed', (req, res) => {
+    // Query to select all rows from the placed_info table
+    const query = 'SELECT * FROM placed_info';
+
+    // Execute the query
+    connection.query(query, (error, results) => {
+        if (error) {
+            console.error('Error retrieving placed info:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        } else {
+            // Send the results as a response
+            res.status(200).json(results);
+        }
+    });
+});
+
+app.get('/students/info', (req, res) => {
+  
+  const universityRollNumber = req.query.universityRollNumber; 
+
+  // Fetch details from the db table based on the university number
+  const query = `
+    SELECT *
+    FROM db
+    WHERE \`University Roll Number\` = ?
+  `;
+  connection.query(query, [universityRollNumber], (error, studentDetails, fields) => {
+    if (error) {
+      console.error('Error fetching student details:', error);
+      res.status(500).json({ error: 'An error occurred while fetching student details' });
+      return;
+    }
+
+    // Fetch details from the placed_info table based on the university roll number
+    const placedInfoQuery = `
+      SELECT *
+      FROM placed_info
+      WHERE university_number = ?
+    `;
+    connection.query(placedInfoQuery, [universityRollNumber], (error, placedInfo, fields) => {
+      if (error) {
+        console.error('Error fetching placed info:', error);
+        res.status(500).json({ error: 'An error occurred while fetching placed info' });
+        return;
+      }
+
+      // Return both sets of data
+      res.json({ studentDetails, placedInfo });
+    });
   });
 });
 
@@ -185,6 +317,38 @@ app.get('/upcoming', (req, res) => {
     res.json(results);
   });
 });
+app.get('/api/question-bank/:companyName', (req, res) => {
+  const { companyName } = req.params;
+
+  // Query to fetch the PDF blob data from the database
+  const sql = 'SELECT pdf_data FROM company_data WHERE name = ?';
+  connection.query(sql, [companyName], (error, results) => {
+    if (error) {
+      console.error('Error fetching PDF data:', error);
+      res.status(500).json({ error: 'Failed to fetch PDF data' });
+      return;
+    }
+
+    // Check if any results were returned
+    if (results.length === 0 || !results[0].pdf_data) {
+      res.status(404).json({ error: 'PDF data not found for the company' });
+      return;
+    }
+
+    // Retrieve the PDF blob data from the query results
+    const pdfBlobData = results[0].pdf_data;
+
+    // Convert the blob data into a buffer
+    const pdfBuffer = Buffer.from(pdfBlobData, 'binary');
+    console.log( pdfBuffer);
+   
+    // Send the PDF buffer as a response
+    res.setHeader('Content-Type', 'application/pdf');
+    res.send(pdfBuffer);
+    console.log( "Res",pdfBuffer);
+  });
+});
+
 
 app.get('/previous', (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
@@ -258,43 +422,51 @@ app.post('/api/upload', upload.single('file'), (req, res) => {
     });
 });
 
-app.post('/api/upload-pdf', (req, res) => {
-  const { filename, mimeType, data } = req.body; // Assuming you're sending filename, mimeType, and data in the request body
-
-  // Insert the PDF data into the database
-  const sql = 'INSERT INTO pdf_documents (filename, mime_type, data) VALUES (?, ?, ?)';
-  connection.query(sql, [filename, mimeType, data], (err, result) => {
+app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
+  const { companyName } = req.body;
+  const pdfPath = req.file.path;
+  console.log(companyName , pdfPath);
+  // Read the PDF file
+  fs.readFile(pdfPath, (err, data) => {
     if (err) {
-      console.error('Error inserting PDF data:', err);
-      res.status(500).json({ error: 'Failed to upload PDF' });
-      return;
+      console.error('Error reading PDF file:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF' });
     }
-    console.log('PDF uploaded successfully');
-    res.status(200).json({ message: 'PDF uploaded successfully' });
+
+    // Update PDF data in the database based on the company name
+    const sql = 'UPDATE company_data SET pdf_data = ? WHERE name = ?';
+    connection.query(sql, [data, companyName], (err, result) => {
+      if (err) {
+        console.error('Error updating PDF data:', err);
+        return res.status(500).json({ error: 'Failed to update PDF data' });
+      }
+      console.log('PDF data updated successfully');
+      res.status(200).json({ message: 'PDF data updated successfully' });
+    });
   });
 });
 
-// Route to fetch all PDF documents from the database
-app.get('/api/get-all-pdfs', (req, res) => {
-  // Query to retrieve all PDF data from the database
-  const sql = 'SELECT id, filename, mime_type FROM pdf_documents';
 
-  connection.query(sql, (err, results) => {
-    if (err) {
-      console.error('Error fetching PDFs from database:', err);
-      res.status(500).json({ error: 'Failed to fetch PDFs from database' });
-      return;
-    }
 
-    // Send the PDF data to the client
-    res.json(results);
-  });
-});
+// // Route to fetch all PDF documents from the database
+// app.get('/api/get-all-pdfs', (req, res) => {
+//   // Query to retrieve all PDF data from the database
+//   const sql = 'SELECT * FROM pdf_documents';
 
-// Your existing dependencies and configurations...
+//   connection.query(sql, (err, results) => {
+//     if (err) { 
+//       console.error('Error fetching PDFs from database:', err);
+//       res.status(500).json({ error: 'Failed to fetch PDFs from database' });
+//       return;
+//     }
 
-// Your existing MySQL connection...
-// Your existing JWT verification middleware...
+//     // Send the PDF data to the client
+//     res.json(results);
+//   });
+// });
+
+
+
 
 app.post('/validate', (req, res) => {
   const { universityRollNumber, password } = req.body;
@@ -341,7 +513,7 @@ app.post('/send-otp', (req, res) => {
   twilioClient.messages
     .create({
       body: `Your OTP is ${otp}`,
-      from: '+14012278724', // Replace with your Twilio phone number
+      from: '++16503514109', // Replace with your Twilio phone number
       to: mobileNumber
     })
     .then(message => {

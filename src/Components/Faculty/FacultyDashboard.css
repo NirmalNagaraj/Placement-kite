@@ -1,0 +1,128 @@
+.faculty-dashboard-container {
+  display: flex;
+}
+
+.faculty-sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #f0f0f0;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.faculty-sidebar-header {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.faculty-sidebar-nav {
+  list-style-type: none;
+  padding: 0;
+}
+
+.faculty-sidebar-nav li {
+  margin-bottom: 10px;
+}
+
+.faculty-sidebar-nav li a {
+  text-decoration: none;
+  color: #333;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.faculty-sidebar-nav li a:hover {
+  color: #007bff;
+}
+
+.faculty-active {
+  color: #007bff;
+}
+
+.faculty-main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.faculty-hiring-count {
+  font-size: 60px;
+  font-weight: bold;
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* .faculty-speedometer {
+  position: relative;
+  width: 200px;
+  height: 100px;
+}
+
+.faculty-speedometer-background {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to right, #4caf50 0%, #f44336 100%);
+  border-radius: 50%;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.faculty-needle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2px;
+  height: 50%;
+  background-color: black;
+  transform-origin: 0% 100%;
+  transform: translateX(-50%);
+}
+
+.faculty-speedometer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+} */
+
+.company-drives-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.company-drives-table th,
+.company-drives-table td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.company-drives-table th {
+  background-color: #f2f2f2;
+}
+
+.company-drives-table tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.company-drives-table tbody tr:hover {
+  background-color: #ddd;
+}
