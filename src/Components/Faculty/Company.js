@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Select, MenuItem, FormControl, InputLabel, Snackbar } from '@mui/material';
 import './Company.css';
-import InputText from '../../InputText';
-import InputNumber from '../../InputNumber';
 
 function CompanyForm() {
   const [companyName, setCompanyName] = useState('');
@@ -25,6 +23,7 @@ function CompanyForm() {
         criteria,
         link
       });
+      console.log(role);
       setSnackbarOpen(true); // Open the Snackbar on successful submission
     } catch (error) {
       console.error('Error inserting data:', error);
@@ -38,6 +37,11 @@ function CompanyForm() {
     setSnackbarOpen(false); // Close the Snackbar when clicked on the close button
   };
 
+  const handleRoleChange = (event) => {
+    console.log("Role:", event.target.value); // Log the value received
+    setRole(event.target.value); // Update the state
+  };
+
   return (
     <div className='container'>
       <div className='l'></div>
@@ -46,9 +50,9 @@ function CompanyForm() {
             <h2>Company Form</h2>
             <form onSubmit={handleSubmit} className='form-container'>
               <div className='input-field'>
-                <InputText
+                <TextField
                   label="Company Name"
-                  type = "text"
+                  type="text"
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   required
@@ -67,16 +71,18 @@ function CompanyForm() {
                 />
               </div>
               <div className='input-field'>
-                <InputNumber
+                <TextField
                   label="CTC"
+                  type="number"
                   value={ctc}
-                  onChange={(value) => setCtc(value)}
+                  onChange={(e) => setCtc(e.target.value)}
+                  className='field'
                 />
               </div>
               <div className='input-field'>
-                <InputText
+                <TextField
                   label="Role"
-                  type = "text"
+                  type="text"
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
                   required
@@ -86,8 +92,7 @@ function CompanyForm() {
               <div className='input-field'>
                 <FormControl fullWidth >
                   <InputLabel>Criteria</InputLabel>
-                  <Select value={criteria} onChange={(e) => setCriteria(e.target.value)} className='field'>
-
+                  <Select value={criteria} onChange={handleRoleChange} className='field'>
                     <MenuItem value="80%">Overall 80%</MenuItem>
                     <MenuItem value="60%">Overall 60%</MenuItem>
                     <MenuItem value="common">Common for All</MenuItem>
@@ -96,15 +101,13 @@ function CompanyForm() {
               </div>
               <div className='input-field'>
                 <TextField
-                  fullWidth
-                  type="text"
                   label="Link"
+                  type="text"
                   value={link}
                   onChange={(e) => setLink(e.target.value)}
-                  
                   className='field'
                 />
-                </div>
+              </div>
               <button type="submit" variant="contained" className='logBtn'>Submit</button>
             </form>
         </div>
@@ -117,11 +120,9 @@ function CompanyForm() {
           onClose={handleCloseSnackbar}
           message="Data inserted successfully"
         />
-        </div>
-      
+      </div>
     </div>
   );
 }
 
 export default CompanyForm;
-

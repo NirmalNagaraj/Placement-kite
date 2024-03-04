@@ -12,6 +12,7 @@
   align-items: center;
   padding:0px 80px;
   height:90px;
+  
   box-shadow: rgba(0, 0, 0, 0.08) 0px 3px;
   font-weight: 700;
   background-color: #fff;
@@ -29,6 +30,7 @@
 
 .left-nav{
   max-height: 100%;
+  min-height: 90vh;
   background-color:#EFF2F9;
   flex:0.2;
   padding: 0 15px;
@@ -82,13 +84,13 @@
   padding:20px;
 }
 
-.user-details{  
+/* .user-details{  
   padding: 0px 30px 15px 30px;
   border: 1px solid #ff8c11;
   background-color: #ff8c1108;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 3px 3px ;
-}
+} */
 
 .h3{
   font-size: 35px;
@@ -104,6 +106,12 @@
   gap:10px;
   margin-top: 10px;
 
+}
+.Name{
+  font-size: 30px;
+}
+span{
+  color: #008cff;
 }
 
 .personal-title{
@@ -134,4 +142,16 @@
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+
+.dashboard-con{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20%;
+}
+
+.dashboard-container button a{
+  color: #fff;
 }
