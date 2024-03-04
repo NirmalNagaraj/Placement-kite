@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const UploadOfferLetter = () => {
   const [companyName, setCompanyName] = useState('');
@@ -14,12 +15,31 @@ const UploadOfferLetter = () => {
     setUploadedDocuments(file);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Perform form submission or validation here
-    console.log('Company Name:', companyName);
-    console.log('Uploaded Documents:', uploadedDocuments);
+    // Get token from localStorage
+    const token = localStorage.getItem('token');
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('companyName', companyName);
+    formData.append('pdfFile', uploadedDocuments);
+
+    try {
+      // Send POST request to /offerLetter route with token in headers
+      const response = await axios.post('http://localhost:3000/offerLetter', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}` // Include token in headers
+        }
+      });
+      console.log(response.data);
+      // Handle success
+    } catch (error) {
+      console.error('Error uploading offer letter:', error);
+      // Handle error
+    }
   };
 
   return (
@@ -42,10 +62,10 @@ const UploadOfferLetter = () => {
             type="file"
             id="uploadedDocuments"
             onChange={handleDocumentsChange}
-            accept=".pdf,.doc,.docx,.jpg,.png"
+            accept=".pdf"
             required
           />
-          <p>(Accepted formats: PDF, DOC, DOCX, JPG, PNG)</p>
+          <p>(Accepted formats: PDF only)</p>
         </div>
         <button type="submit">Submit</button>
       </form>

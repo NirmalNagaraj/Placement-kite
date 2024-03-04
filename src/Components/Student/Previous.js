@@ -136,6 +136,7 @@ function PreviousPage() {
                     </Typography>
                   </div>
                   <button onClick={() => handleQuestionBankClick(company.name)}>Question Bank</button>
+                  <a href="/QuestionBank">View Questions</a>
                 </CardContent>
               </Card>
             ))}

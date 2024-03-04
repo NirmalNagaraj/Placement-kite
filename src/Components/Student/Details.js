@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const UserDetails = () => {
+const PersonalDetailsPage = () => {
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -13,8 +13,7 @@ const UserDetails = () => {
             Authorization: token ? `Bearer ${token}` : '',
           },
         });
-
-        setUserDetails(response.data);
+        setUserDetails(response.data.userDetails);
       } catch (error) {
         console.error('Error fetching user details:', error.response);
       }
@@ -23,30 +22,34 @@ const UserDetails = () => {
     fetchUserDetails();
   }, []);
 
-  const renderUserDetails = () => {
-    return (
-      <div>
-        {Object.entries(userDetails).map(([key, value]) => (
-          <div key={key}>
-            <h3>{key}</h3>
-            <ul>
-              {Object.entries(value).map(([subKey, subValue]) => (
-                <li key={subKey}><strong>{subKey}:</strong> {subValue}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div>
-      <h1>User Details</h1>
-      <a href='/offerLetter'>Upload Documents</a>
-      {userDetails ? renderUserDetails() : <p>Loading...</p>}
+      <h2>User Details</h2>
+      {userDetails ? (
+        <div>
+          <p>Register Number: {userDetails.RegisterNumber}</p>
+          <p>Name: {userDetails.Name}</p>
+          <p>Gender: {userDetails.Gender}</p>
+          <p>Branch: {userDetails.Branch}</p>
+          <p>10th Marks: {userDetails.Marks10}</p>
+          <p>Mode of Study: {userDetails.ModeOfStudy}</p>
+          <p>12th Marks or Diploma: {userDetails.Marks12orDiploma}</p>
+          <p>CGPA: {userDetails.CGPA}</p>
+          <p>Backlogs: {userDetails.Backlogs}</p>
+          <p>History of Arrears: {userDetails.HistoryOfArrears}</p>
+          <p>Mobile Number: {userDetails.MobileNumber}</p>
+          <p>Email: {userDetails.Email}</p>
+          <p>Residence: {userDetails.Residence}</p>
+          <p>Address: {userDetails.Address}</p>
+          <p>Degree: {userDetails.Degree}</p>
+          <p>Year of Passing: {userDetails.YearOfPassing}</p>
+          <p>Domain: {userDetails.Domain}</p>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };
 
-export default UserDetails;
+export default PersonalDetailsPage;

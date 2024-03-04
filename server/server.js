@@ -56,6 +56,18 @@ const verifyToken = (req, res, next) => {
     next(); 
   });
 };
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 app.use(bodyParser.json());
 
 app.get('/api/data', (req, res) => {
@@ -389,6 +401,32 @@ app.get('/verify-user',verifyToken, (req, res) => {
   });
 });
 
+app.post('/offerLetter', verifyToken,upload.single('pdfFile'), (req, res) => {
+  const { companyName } = req.body;
+  const registerNumber = req.user.universityRollNumber;
+  const pdfPath = req.file.path;
+  console.log(companyName , pdfPath);
+
+  // Read the PDF file
+  fs.readFile(pdfPath, (err, data) => {
+    if (err) {
+      console.error('Error reading PDF file:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF' });
+    }
+
+    // Insert the offer letter data into the database
+    const sql = 'INSERT INTO OfferLetters (RegisterNumber ,Company_name, Offerletter) VALUES (?,?, ?)';
+    connection.query(sql, [registerNumber,companyName, data], (err, result) => {
+      if (err) {
+        console.error('Error inserting offer letter data:', err);
+        return res.status(500).json({ error: 'Failed to insert offer letter data' });
+      }
+      console.log('Offer letter data inserted successfully');
+      res.status(200).json({ message: 'Offer letter data inserted successfully' });
+    });
+  });
+});
+
 
 app.get('/upcoming', (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
@@ -468,16 +506,6 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
 
 app.post('/api/upload', upload.single('file'), (req, res) => {
   const filename = req.file.path;
