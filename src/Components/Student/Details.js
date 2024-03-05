@@ -4,7 +4,7 @@ import './Detail.css'
 import LogoutButton from '../../Logout';
 import KiteLogo from '../../images/kite_logo.png'
 
-const UserDetails = () => {
+const PersonalDetailsPage = () => {
   const [userDetails, setUserDetails] = useState(null);
 
   useEffect(() => {
@@ -73,4 +73,4 @@ const UserDetails = () => {
   );
 };
 
-export default UserDetails;
+export default PersonalDetailsPage;

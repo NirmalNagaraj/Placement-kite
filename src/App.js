@@ -23,6 +23,9 @@ import StudentInfoPage from './Components/Faculty/StudentInfo';
 import UserDetailsPage from './Components/Student/UserDetails';
 import UserDetails from './Components/Student/Details';
 import UploadOfferLetter from './Components/Student/OfferLetter';
+import QP from './Components/Student/QP';
+import QBList from './Components/Student/QPlist';
+import QPUpload from './Components/Student/QP';
 
 
 
@@ -51,6 +54,9 @@ export default function App()  {
            <Route path="/student-info" element={<StudentInfoPage />} />
            <Route path="/userDetails" element={<UserDetailsPage />} />
            <Route path="/Details" element={<UserDetails />} />
+           <Route path="/QuestionBank" element={<QPUpload />} />
+          <Route path="/QBlist/:companyName" element={<QBList />} />
+
            <Route path="/offerLetter" element={<UploadOfferLetter />} />
           
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />

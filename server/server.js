@@ -8,12 +8,13 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
+const { log } = require('console');
 
 
 const app = express();
 const port = 3000;
 const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
-const authToken = '644fa9b6b1a41109be35871bb29b99fa'; // Replace with your Twilio Auth Token
+const authToken = '5d66279b0123a1e91a34c113e619d8bf'; // Replace with your Twilio Auth Token
 const twilioClient = twilio(accountSid, authToken);
 const generateOTP = () => {
   return crypto.randomBytes(3).toString('hex').toUpperCase(); // Generates a 6-digit OTP (3 bytes * 2 characters per byte)
@@ -28,7 +29,7 @@ app.use(express.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root',
+  password: 'Beelzebub03',
   database: 'students_data',
 }); 
 
@@ -56,6 +57,18 @@ const verifyToken = (req, res, next) => {
     next(); 
   });
 };
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 app.use(bodyParser.json());
 
 app.get('/api/data', (req, res) => {
@@ -332,7 +345,7 @@ app.get('/students/info', (req, res) => {
 app.post('/userDetails', verifyToken, (req, res) => {
   const {
     name, gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
-    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing ,domain
+    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
   } = req.body;
 
   // Extract RegisterNumber from decoded JWT token
@@ -343,12 +356,12 @@ app.post('/userDetails', verifyToken, (req, res) => {
   const query = `
     INSERT INTO UserDetails (RegisterNumber, Name, Gender, Branch, Marks10, ModeOfStudy, Marks12orDiploma,
       CGPA, Backlogs, HistoryOfArrears, MobileNumber, Email,Residence, Address,
-      Degree, YearOfPassing, Domain)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      Degree, YearOfPassing)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `; 
   const values = [
     universityRollNumber, name,gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
-    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing , domain
+    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
   ];
   console.log(values);
   // Execute the SQL query to insert user details
@@ -389,7 +402,69 @@ app.get('/verify-user',verifyToken, (req, res) => {
   });
 });
 
+app.post('/offerLetter', verifyToken,upload.single('pdfFile'), (req, res) => {
+  const { companyName } = req.body;
+  const registerNumber = req.user.universityRollNumber;
+  const pdfPath = req.file.path;
+  console.log(companyName , pdfPath);
 
+  // Read the PDF file
+  fs.readFile(pdfPath, (err, data) => {
+    if (err) {
+      console.error('Error reading PDF file:', err);
+      return res.status(500).json({ error: 'Failed to upload PDF' });
+    }
+
+    // Insert the offer letter data into the database
+    const sql = 'INSERT INTO OfferLetters (RegisterNumber ,Company_name, Offerletter) VALUES (?,?, ?)';
+    connection.query(sql, [registerNumber,companyName, data], (err, result) => {
+      if (err) {
+        console.error('Error inserting offer letter data:', err);
+        return res.status(500).json({ error: 'Failed to insert offer letter data' });
+      }
+      console.log('Offer letter data inserted successfully');
+      res.status(200).json({ message: 'Offer letter data inserted successfully' });
+    });
+  });
+});
+
+app.post('/api/upload-qp', verifyToken, upload.single('solution_data'), (req, res) => {
+  const { company_name, round, question_description, solution_type } = req.body;
+  const registerNumber = req.user.universityRollNumber; // Get registerNumber from user's token
+  const solution_data = req.file ? fs.readFileSync(req.file.path) : null; // Read file if uploaded
+
+  // Insert data into the database
+  const sql = 'INSERT INTO SolutionData (RegisterNumber, company_name, round, question_description, solution_type, solution_data) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(sql, [registerNumber, company_name, round, question_description, solution_type, solution_data], (error, results) => {
+    if (error) {
+      console.error('Error uploading question paper:', error);
+      return res.status(500).json({ error: 'An error occurred while uploading the question paper' });
+    }
+
+    // Remove the temporary file after reading
+    if (req.file) {
+      fs.unlinkSync(req.file.path);
+    }
+
+    res.status(200).json({ message: 'Question paper uploaded successfully' });
+  });
+});
+app.get('/api/get-qp', (req, res) => {
+  const companyName = req.query.companyName; // Extract company name from query parameter
+
+  // SQL query to select all data from SolutionData with the specified company name
+  const sql = 'SELECT * FROM SolutionData WHERE company_name = ?';
+
+  // Execute the SQL query with the company name parameter
+  connection.query(sql, [companyName], (err, results) => {
+    if (err) {
+      console.error('Error fetching data:', err);
+      return res.status(500).json({ error: 'Failed to fetch data' });
+    }
+    // Send the fetched data as JSON response
+    res.json(results);
+  });
+});
 app.get('/upcoming', (req, res) => {
   const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
   connection.query('SELECT * FROM company_data WHERE date >= ?', [currentDate], (error, results, fields) => {
@@ -400,6 +475,35 @@ app.get('/upcoming', (req, res) => {
     res.json(results);
   });
 });
+app.get('/api/get-document/:companyName', (req, res) => {
+  const companyName = req.params.companyName;
+  console.log(companyName);
+  // Fetch document data (Blob) from the SolutionData table based on the company name
+  connection.query('SELECT solution_data FROM SolutionData WHERE company_name = ?', [companyName], (error, documentData) => {
+    if (error) {
+      console.error('Error fetching document:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    // Check if document data exists
+    if (documentData.length === 0) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+
+    // Extract the Blob data
+    const documentBlob = documentData[0].solution_data;
+
+    // Convert Blob data to Buffer
+    const documentBuffer = Buffer.from(documentBlob, 'binary');
+
+    // Set the response headers to indicate that it's a PDF file
+    res.setHeader('Content-Type', 'application/pdf');
+
+    // Send the document data in the response
+    res.send(documentBuffer);
+  });
+});
+
 app.get('/api/question-bank/:companyName', (req, res) => {
   const { companyName } = req.params;
 
@@ -468,16 +572,6 @@ app.post('/logout', (req, res) => {
   res.status(200).json({ message: 'Logout successful' });
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
-
-const upload = multer({ storage: storage });
 
 app.post('/api/upload', upload.single('file'), (req, res) => {
   const filename = req.file.path;
@@ -596,7 +690,7 @@ app.post('/send-otp', (req, res) => {
   twilioClient.messages
     .create({
       body: `Your OTP is ${otp}`,
-      from: '++16503514109', // Replace with your Twilio phone number
+      from: '+16503514109', // Replace with your Twilio phone number
       to: mobileNumber
     })
     .then(message => {
