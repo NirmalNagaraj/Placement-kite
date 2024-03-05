@@ -1,0 +1,21 @@
+.left>div{
+    color: aliceblue;
+    font-size: 50px;
+    font-weight: 600;
+    width:600px;
+    text-align: center;
+}
+
+.left>h3{
+    color: aliceblue;
+    margin: 10px 0 0 90px;
+
+}
+
+
+.left{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}

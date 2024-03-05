@@ -1,0 +1,31 @@
+.pdf-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set the height to make it fill the viewport */
+  }
+  
+  .pdf-container > div {
+    margin-bottom: 10px; /* Add some space between each input field */
+  }
+  
+  .pdf-container input[type="file"],
+  .pdf-container input[type="text"],
+  .pdf-container input[type="number"],
+  .pdf-container button {
+    width: 300px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+  }
+  
+  .pdf-container button {
+    background-color: #007bff;
+    color: #fff; 
+    cursor: pointer;
+  }
+  
+  .pdf-container button:hover {
+    background-color: #0056b3; 
+  }

@@ -7,6 +7,7 @@
 .container{
     display:flex ;
     max-height: 100vh;
+    padding: 0 490px;
 }
 
 .r{

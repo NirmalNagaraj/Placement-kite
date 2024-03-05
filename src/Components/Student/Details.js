@@ -42,6 +42,7 @@ const UserDetails = () => {
             <LogoutButton />
           </div>
           <div className="user-info">
+          <h1>Personal Details</h1>
             {userDetails ? (
               <div className='profile-setup'>
                 <p>Register Number: {userDetails.RegisterNumber}</p>

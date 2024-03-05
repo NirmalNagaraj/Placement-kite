@@ -27,7 +27,10 @@ const Login = () => {
 
   return (
     <div className='container'>
-      <div className='left'></div>
+      <div className='left'>
+        <div>"Learning is never done without errors and defeat"</div>
+        <h3>- Valdimir Lenin</h3>
+      </div>
       <div className='right'>
         <div className='form-group'>
           <h2>Login</h2>

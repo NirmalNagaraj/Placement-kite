@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import './UploadPDF.css'
 
 function UploadPDF() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -84,7 +85,7 @@ function UploadPDF() {
   };
 
   return (
-    <div>
+    <div className='pdf-container'>
       <div>
         <input type="file" accept=".pdf" onChange={handleFileChange} />
       </div>

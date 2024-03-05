@@ -29,34 +29,57 @@ function StudentInfoPage() {
   };
 
   return (
-    <div>
-      <h1>Student Information</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          University Roll Number:
-          <input 
-            type="text" 
-            value={universityRollNumber} 
-            onChange={(e) => setUniversityRollNumber(e.target.value)} 
-            required 
-          />
-        </label>
-        <button type="submit">Retrieve Data</button>
-      </form>
-      {error && <p>{error}</p>}
-      {studentDetails && (
-        <div>
-          <h2>Student Details</h2>
-          <pre>{JSON.stringify(studentDetails, null, 2)}</pre>
-        </div>
-      )}
-      {placedInfo && (
-        <div>
-          <h2>Placed Info</h2>
-          <pre>{JSON.stringify(placedInfo, null, 2)}</pre>
-        </div>
-      )}
+    <div style={{ textAlign: 'center', padding:"30px 0" }}>
+    <h1>Student Information</h1>
+    <form onSubmit={handleSubmit} style={{ display: 'inline-block' }}>
+    <label style={{ display: 'block', marginBottom: '0px' }}>
+      University Roll Number:
+      <input 
+        type="text" 
+        value={universityRollNumber} 
+        onChange={(e) => setUniversityRollNumber(e.target.value)} 
+        required 
+        style={{ marginLeft: '5px' }}
+      />
+    </label>
+    <br />
+    <button type="submit">Retrieve Data</button>
+  </form>
+
+  {error && <p>{error}</p>}
+  {studentDetails && (
+    <div style={{ textAlign: 'left', margin: 'auto', maxWidth: '600px' }}>
+      <h2>Student Details</h2>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <tbody>
+          {Object.entries(studentDetails[0]).map(([key, value], index) => (
+            <tr key={index}>
+              <td style={{ padding: '8px', border: '1px solid #ddd' }}>{key}</td>
+              <td style={{ padding: '8px', border: '1px solid #ddd' }}>{value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
+  )}
+  {placedInfo && (
+    <div style={{ textAlign: 'left', margin: 'auto', maxWidth: '600px' }}>
+      <h2>Placed Info</h2>
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <tbody>
+          {Object.entries(placedInfo[0]).map(([key, value], index) => (
+            <tr key={index}>
+              <td style={{ padding: '8px', border: '1px solid #ddd' }}>{key}</td>
+              <td style={{ padding: '8px', border: '1px solid #ddd' }}>{value}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )}
+</div>
+
+
   );
 }
 

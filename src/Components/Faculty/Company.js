@@ -44,73 +44,83 @@ function CompanyForm() {
 
   return (
     <div className='container'>
-      <div className='l'></div>
-      <div className='r'>
-        <div className='form-group'>
-            <h2>Company Form</h2>
-            <form onSubmit={handleSubmit} className='form-container'>
-              <div className='input-field'>
-                <TextField
-                  label="Company Name"
-                  type="text"
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  required
-                  className='field'
-                />
-              </div>
-              <div className='input-field'>
-                <TextField
-                  fullWidth
-                  type="date"
-                  label="Date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  required
-                  className='field'
-                />
-              </div>
-              <div className='input-field'>
-                <TextField
-                  label="CTC"
-                  type="number"
-                  value={ctc}
-                  onChange={(e) => setCtc(e.target.value)}
-                  className='field'
-                />
-              </div>
-              <div className='input-field'>
-                <TextField
-                  label="Role"
-                  type="text"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                  required
-                  className='field'
-                />
-              </div>
-              <div className='input-field'>
-                <FormControl fullWidth >
-                  <InputLabel>Criteria</InputLabel>
-                  <Select value={criteria} onChange={handleRoleChange} className='field'>
-                    <MenuItem value="80%">Overall 80%</MenuItem>
-                    <MenuItem value="60%">Overall 60%</MenuItem>
-                    <MenuItem value="common">Common for All</MenuItem>
-                  </Select>
-                </FormControl>
-              </div>
-              <div className='input-field'>
-                <TextField
-                  label="Link"
-                  type="text"
-                  value={link}
-                  onChange={(e) => setLink(e.target.value)}
-                  className='field'
-                />
-              </div>
-              <button type="submit" variant="contained" className='logBtn'>Submit</button>
-            </form>
+  <div className='r'>
+    <div className='form-group'>
+      <h2>Company Form</h2>
+      <form onSubmit={handleSubmit} className='form-container'>
+        <div className='input-field'>
+          <label htmlFor="companyName">Company Name</label>
+          <input 
+            type="text" 
+            id="companyName" 
+            value={companyName} 
+            onChange={(e) => setCompanyName(e.target.value)} 
+            required 
+            className='field'
+          />
         </div>
+        <div className='input-field'>
+          <label htmlFor="date">Date</label>
+          <input 
+            type="date" 
+            id="date" 
+            value={date} 
+            onChange={(e) => setDate(e.target.value)} 
+            required 
+            className='field'
+          />
+        </div>
+        <div className='input-field'>
+          <label htmlFor="ctc">CTC</label>
+          <input 
+            type="number" 
+            id="ctc" 
+            value={ctc} 
+            onChange={(e) => setCtc(e.target.value)} 
+            className='field'
+          />
+        </div>
+        <div className='input-field'>
+          <label htmlFor="role">Role</label>
+          <input 
+            type="text" 
+            id="role" 
+            value={role} 
+            onChange={(e) => setRole(e.target.value)} 
+            required 
+            className='field'
+          />
+        </div>
+        <div className='input-field'>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="criteria">Criteria</InputLabel>
+            <Select 
+              value={criteria} 
+              onChange={handleRoleChange} 
+              inputProps={{ id: 'criteria' }} 
+              className='field'
+            >
+              <MenuItem value="80%">Overall 80%</MenuItem>
+              <MenuItem value="60%">Overall 60%</MenuItem>
+              <MenuItem value="common">Common for All</MenuItem>
+            </Select>
+          </FormControl>
+        </div>
+        <div className='input-field'>
+          <label htmlFor="link">Link</label>
+          <input 
+            type="text" 
+            id="link" 
+            value={link} 
+            onChange={(e) => setLink(e.target.value)} 
+            className='field'
+          />
+        </div>
+        <button type="submit" className='logBtn'>Submit</button>
+      </form>
+    </div>
+  
+
         
         {/* Snackbar for showing success message */}
         <Snackbar
