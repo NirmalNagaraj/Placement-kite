@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, FormControl, FormLabel, Select, MenuItem } from '@mui/material';
-import { IconButton } from '@mui/material';
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import './UserDetails.css';
+
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,7 +10,6 @@ const UserDetailsPage = () => {
   const [branch, setBranch] = useState('');
   const [educationLevel, setEducationLevel] = useState('');
   const [residence, setResidence] = useState('');
-  const [interests, setInterests] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     gender:'',
@@ -26,7 +25,8 @@ const UserDetailsPage = () => {
     address: '',
     degree: '',
     yearOfPassing: '',
-    educationLevel: '' // Added educationLevel to formData
+    educationLevel: '',
+    domain: '' // Added educationLevel to formData
   });
   const  navigate = useNavigate();
 
@@ -72,24 +72,6 @@ const UserDetailsPage = () => {
     });
   };
 
-  const handleInterestChange = (index, event) => {
-    const newInterests = [...interests];
-    newInterests[index] = event.target.value;
-    setInterests(newInterests);
-  };
-
-  const addInterestField = () => {
-    if (interests.length < 3) {
-      setInterests([...interests, '']);
-    }
-  };
-
-  const removeInterestField = (index) => {
-    const newInterests = [...interests];
-    newInterests.splice(index, 1);
-    setInterests(newInterests);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -113,9 +95,11 @@ const UserDetailsPage = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Typography variant="h4">User Details</Typography>
-
+    <div className='main-div'>
+    <Typography variant="h4">User Details</Typography>
+    <form onSubmit={handleSubmit} className="form-container">
+      
+    <div className='form-div'>
       <TextField label="Name" name="name" fullWidth onChange={handleInputChange} />
       
       <FormControl fullWidth>
@@ -190,32 +174,13 @@ const UserDetailsPage = () => {
       <TextField label="Address" name="address" fullWidth onChange={handleInputChange} />
       <TextField label="Degree" name="degree" fullWidth onChange={handleInputChange} />
       <TextField label="Year of Passing" name="yearOfPassing" fullWidth onChange={handleInputChange} />
-
-      {/* Add Interest Fields */}
-      {interests.map((interest, index) => (
-        <TextField
-          key={index}
-          label={`Area of Interest ${index + 1}`}
-          fullWidth
-          value={interest}
-          onChange={(event) => handleInterestChange(index, event)}
-          InputProps={{
-            endAdornment: (
-              <IconButton onClick={() => removeInterestField(index)}>
-                <RemoveCircleOutlineIcon />
-              </IconButton>
-            ),
-          }}
-        />
-      ))}
-      {interests.length < 3 && (
-        <Button variant="outlined" onClick={addInterestField}>
-          Add Interest
-        </Button>
-      )}
-
+      <TextField label="Domain" name="domain" fullWidth onChange={handleInputChange} />
+      </div>
+  
       <Button type="submit" variant="contained" color="primary">Submit</Button>
     </form>
+    </div>
+   
   );
 };
 

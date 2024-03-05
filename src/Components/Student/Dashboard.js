@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Dashboard.css'; // Import CSS file for styling
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import MailIcon from '@mui/icons-material/Mail';
-import PercentIcon from '@mui/icons-material/Percent';
-import SummarizeIcon from '@mui/icons-material/Summarize';
-import BadgeIcon from '@mui/icons-material/Badge';
-import DateRangeIcon from '@mui/icons-material/DateRange';
-import ComputerIcon from '@mui/icons-material/Computer';
-import RequestPageIcon from '@mui/icons-material/RequestPage';
-import CorporateFareIcon from '@mui/icons-material/CorporateFare';
-import LinkIcon from '@mui/icons-material/Link';
+import {
+  AccountCircle as AccountCircleIcon,
+  Percent as PercentIcon,
+  DateRange as DateRangeIcon,
+  Computer as ComputerIcon,
+  RequestPage as RequestPageIcon,
+  CorporateFare as CorporateFareIcon,
+  Link as LinkIcon
+} from '@mui/icons-material';
 import LogoutButton from '../../Logout';
+import KiteLogo from '../../images/kite_logo.png'
 
 function formatDate(dateString) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -91,8 +90,8 @@ function Dashboard() {
 
   if (!verifiedUser) {
     return (
-      <div className="dashboard-container">
-        <h1>Complete your profile setup</h1>
+      <div className="dashboard-con">
+        <h1>Looks like you haven't competed your profile!</h1>
         <button><a href='/userDetails'>Setup Profile</a></button>
       </div>
     );
@@ -104,7 +103,7 @@ function Dashboard() {
       <div>
         <div className='nav'>
           {/* <h2 className="dashboard-title">K</h2> */}
-          <img src='' alt="logo"></img>
+          <img src={KiteLogo} alt="logo" height={80}/>
           <div className='profile'>
           <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
           </div>
@@ -118,7 +117,7 @@ function Dashboard() {
               <a href="/Details">Details</a>
             </div>
               <LogoutButton />
-            </div>
+          </div>
           <div className="user-info">
             <div className='user-details'>
                 

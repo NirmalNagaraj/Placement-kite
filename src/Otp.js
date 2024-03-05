@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import OTPInput from './OTPInput'; // Assuming OTPInput is in the same directory
+import './Otp.css';
 
 const OTPVerificationPage = () => {
   const [mobileNumber, setMobileNumber] = useState('');
@@ -33,21 +35,23 @@ const OTPVerificationPage = () => {
   };
 
   return (
-    <div>
-      <h2>OTP Verification</h2>
-      {!otpSent ? (
-        <div>
-          <label>Enter Mobile Number:</label>
-          <input type="text" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} />
-          <button onClick={handleSendOTP}>Send OTP</button>
-        </div>
-      ) : (
-        <div>
-          <label>Enter OTP:</label>
-          <input type="text" value={otp} onChange={(e) => setOTP(e.target.value)} />
-          <button onClick={handleVerifyOTP}>Verify OTP</button>
-        </div>
-      )}
+    <div className='otp-container'>
+      <div>
+        <h2>OTP Verification</h2>
+        {!otpSent ? (
+          <div className='sendotp-div'>
+            <label>Enter Mobile Number:</label>
+            <input type="text" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className='sendOtp-int'/>
+            <button onClick={handleSendOTP}>Send OTP</button>
+          </div>
+        ) : (
+          <div>
+            <label>Enter OTP:</label>
+            <OTPInput setOTP={setOTP} />
+            <button onClick={handleVerifyOTP}>Verify OTP</button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
