@@ -1,0 +1,29 @@
+
+ .of-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.of-head h2 {
+  margin: 0; /* Remove default margin */
+}
+
+.of-form {
+  margin-top: 20px; /* Adjust top margin as needed */
+}
+
+.of-form label {
+  
+  margin-bottom: 5px;
+}
+
+.of-form input[type="text"],
+.of-form input[type="file"],
+.of-form button {
+  margin-bottom: 10px;
+}
+
+  

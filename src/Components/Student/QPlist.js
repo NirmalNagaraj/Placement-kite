@@ -5,6 +5,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 import './Previous.css';
 import CorporateFareIcon from '@mui/icons-material/CorporateFare';
 import LogoutButton from '../../Logout';
+import './Qplist.css'
 
 function QBList() {
   const { companyName } = useParams();
@@ -46,44 +47,59 @@ const handleDownloadSolution = async (companyName) => {
 
 
   return (
-    <div>
-      <h2>Question Bank List</h2>
-      <Link to="/QuestionBank" className="add-button">Add</Link>
-
-      <h3>Questions for {companyName}</h3>
-
-      <div className='upcoming-list'>
-        {questions.map((question, index) => (
-          <Card key={index} variant="outlined" style={{ marginBottom: '10px' }}>
-            <CardContent>
-              <div className='p'>
-                <CorporateFareIcon fontSize='large' className='icon-color'/>
-                <Typography variant="h5" component="h2">
-                  {question.company_name}
-                </Typography>
-              </div>
-              <div className='p'>
-                <Typography color="textSecondary">
-                  Round: {question.round}
-                </Typography>
-              </div>
-              <div className='p'>
-                <Typography color="textSecondary">
-                  Description: {question.question_description}
-                </Typography>
-              </div>
-              <div className='p'>
-                <Typography color="textSecondary">
-                  Solution Type: {question.solution_type}
-                </Typography>
-              </div>
-              <div className='p'>
-                <button onClick={() => handleDownloadSolution(question.company_name)}>Download Solution</button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+    <div className='qp-container'>
+      <div className='qp-header'>
+          <h2>Question Bank List</h2>
       </div>
+      
+      
+      <div className='qp-lists'>
+        <div className='qp-title'>
+          <h3>Questions for {companyName}</h3>
+          <Link to="/QuestionBank" className="add-button">Add</Link>
+        </div>
+          
+
+            <div className='upcoming-list'>
+              {questions.map((question, index) => (
+                <Card key={index} variant="outlined" style={{ marginBottom: '10px' }}>
+                  <CardContent>
+                    <div className='qp-p1'>
+                      <CorporateFareIcon fontSize='large' className='icon-color'/>
+                      <Typography variant="h5" component="h2">
+                        {question.company_name}
+                      </Typography>
+                    </div>
+                    <div className='qp-p2'>
+                      <Typography color="textSecondary">
+                        Round: {question.round}
+                      </Typography>
+                    </div>
+                    <div className='qp-p3'>
+                      <Typography color="textSecondary" className='qp-desc'>
+                        Description: {question.question_description}
+                      </Typography>
+                    </div> 
+                    <div className='qp-p4'>
+                      <Typography color="textSecondary">
+                        Solution Type: {question.solution_type}
+                      </Typography>
+                    </div>
+                    <div className='qp-p5'>
+                      <button onClick={() => handleDownloadSolution(question.company_name)}>Download Solution</button>
+                    </div>
+                    <div className='qp-p6'>
+                      <Typography color="textSecondary">
+                        By {question.RegisterNumber}
+                      </Typography>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+      </div>
+      
+      
     </div>
   );
 }

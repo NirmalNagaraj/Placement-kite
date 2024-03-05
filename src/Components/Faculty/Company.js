@@ -43,7 +43,7 @@ function CompanyForm() {
   };
 
   return (
-    <div className='container'>
+    <div className='container1'>
   <div className='r'>
     <div className='form-group'>
       <h2>Company Form</h2>

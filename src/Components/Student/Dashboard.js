@@ -115,6 +115,7 @@ function Dashboard() {
               <a href="/previous">Previous Company</a>
               <a href="/validate-change">Change Password</a>
               <a href="/Details">Details</a>
+              <a href="/offerLetter">Update Offer letter</a>
             </div>
               <LogoutButton />
           </div>

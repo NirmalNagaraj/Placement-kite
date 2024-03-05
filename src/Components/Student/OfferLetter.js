@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './OfferLetter.css'
 
 const UploadOfferLetter = () => {
   const [companyName, setCompanyName] = useState('');
@@ -43,32 +44,35 @@ const UploadOfferLetter = () => {
   };
 
   return (
-    <div>
-      <h2>Company Details Form</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="companyName">Company Name:</label>
-          <input
-            type="text"
-            id="companyName"
-            value={companyName}
-            onChange={handleCompanyNameChange}
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="uploadedDocuments">Upload Documents:</label>
-          <input
-            type="file"
-            id="uploadedDocuments"
-            onChange={handleDocumentsChange}
-            accept=".pdf"
-            required
-          />
-          <p>(Accepted formats: PDF only)</p>
-        </div>
-        <button type="submit">Submit</button>
-      </form>
+    <div className='of-container'>
+      <div className='of-head'><h2>Company Details Form</h2></div>
+      <div className='of-form'>
+        <form onSubmit={handleSubmit} > 
+          <div>
+            <label htmlFor="companyName">Company Name:</label><br/>
+            <input
+              type="text"
+              id="companyName"
+              value={companyName}
+              onChange={handleCompanyNameChange}
+              required
+            />
+          </div>
+          <div style={{textAlign:"center"}}>
+            <label htmlFor="uploadedDocuments">Upload Documents:</label><br/>
+            <input
+              type="file"
+              id="uploadedDocuments"
+              onChange={handleDocumentsChange}
+              accept=".pdf"
+              required
+            />
+            <p>(Accepted formats: PDF only)</p>
+          </div>
+          <button type="submit">Submit</button>
+        </form>
+      </div>
+      
     </div>
   );
 };

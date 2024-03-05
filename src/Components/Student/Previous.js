@@ -135,7 +135,9 @@ function PreviousPage() {
                       {company.role}
                     </Typography>
                   </div>
+                  <br></br>
                   <button onClick={() => handleQuestionBankClick(company.name)}>Question Bank</button>
+                  <br></br><br></br>
                   <a href={`/QBlist/${encodeURIComponent(company.name)}`}>View Questions</a>
 
                 </CardContent>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Upload.css'
 
 function UploadButton() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -38,7 +39,7 @@ function UploadButton() {
   };
 
   return (
-    <div>
+    <div className='upload-section'>
       <h2>Upload CSV File</h2>
       <input type="file" onChange={handleFileChange} accept=".csv" />
       <button onClick={handleUpload}>Upload</button>
