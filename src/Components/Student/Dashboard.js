@@ -11,7 +11,9 @@ import {
   Link as LinkIcon
 } from '@mui/icons-material';
 import LogoutButton from '../../Logout';
-import KiteLogo from '../../images/kite_logo.png'
+import KiteLogo from '../../images/kite_logo.png';
+import AppliedCompanies from './AppliedCompanies'; // Import the AppliedCompanies component
+import { Snackbar } from '@mui/material'; // Import Snackbar from Material-UI
 
 function formatDate(dateString) {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -25,6 +27,8 @@ function Dashboard() {
   const [userMarks10th, setUserMarks10th] = useState(null);
   const [userMarks12th, setUserMarks12th] = useState(null);
   const [userAggregatePercentage, setUserAggregatePercentage] = useState(null);
+  const [registerNumber, setRegisterNumber] = useState(''); // State for registerNumber
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // State for Snackbar
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,6 +92,26 @@ function Dashboard() {
     }
   });
 
+  // Function to handle Apply link click
+  const handleApplyLinkClick = async (companyName, registerNumber) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post('http://localhost:3000/apply', { companyName, registerNumber }, {
+        headers: {
+          Authorization: token ? `Bearer ${token}` : '',
+        },
+      });
+      setSnackbarOpen(true); // Open the Snackbar when Apply link is clicked
+    } catch (error) {
+      console.error('Error applying for company:', error.response);
+    }
+  };
+  
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false); // Close the Snackbar when clicked on the close button
+  };
+
   if (!verifiedUser) {
     return (
       <div className="dashboard-con">
@@ -100,34 +124,32 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       {dashboardData ? (
-      <div>
-        <div className='nav'>
-          {/* <h2 className="dashboard-title">K</h2> */}
-          <img src={KiteLogo} alt="logo" height={80}/>
-          <div className='profile'>
-          <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
-          </div>
-        </div>
-        <div className='section'>
-          <div className='left-nav'>
-            <div className='dash-items'>
-              <a href="https://heartfelt-valkyrie-d1bafe.netlify.app/"><button>Edit Resume</button></a>
-              <a href="/previous">Previous Company</a>
-              <a href="/validate-change">Change Password</a>
-              <a href="/Details">Details</a>
-              <a href="/offerLetter">Update Offer letter</a>
+        <div>
+          <div className='nav'>
+            <img src={KiteLogo} alt="logo" height={80}/>
+            <div className='profile'>
+              <AccountCircleIcon /><p className='nav-user-name'>{dashboardData.user.name}</p>
             </div>
-              <LogoutButton />
           </div>
-          <div className="user-info">
-            <div className='user-details'>
-                
+          <div className='section'>
+            <div className='left-nav'>
+              <div className='dash-items'>
+                <a href="https://heartfelt-valkyrie-d1bafe.netlify.app/"><button>Edit Resume</button></a>
+                <a href="/previous">Previous Company</a>
+                <a href="/validate-change">Change Password</a>
+                <a href="/Details">Details</a>
+                <a href="/offerLetter">Update Offer letter</a>
+                <a href="/appliedCompanies">Applied Companies</a> {/* Link to Applied Companies */}
+              </div>
+              <LogoutButton />
+            </div>
+            <div className="user-info">
+              <div className='user-details'>
                 <div className='Name'><h1>Welcome <span>{dashboardData.user.name}</span> !</h1></div>
-               
-            </div> 
-
-            <h2 className="upcoming-title">Upcoming Company</h2>
-            <div className="upcoming-list"> 
+              </div> 
+              <AppliedCompanies /> {/* Display the Applied Companies component */}
+              <h2 className="upcoming-title">Upcoming Company</h2>
+              <div className="upcoming-list"> 
                 {filteredUpcomingData.map(company => (
                   <div key={company.id} className="company-card">
                     <div className='p'><CorporateFareIcon fontSize='large'  className='icon-color'/><h3 className="h3">{company.name}</h3></div>
@@ -135,19 +157,24 @@ function Dashboard() {
                     <div className='p'><RequestPageIcon className='icon-color'/><p>{company.ctc}</p></div>
                     <div className='p'><ComputerIcon className='icon-color'/><p>{company.role}</p></div>
                     <div className='p'><PercentIcon className='icon-color'/><p>{company.criteria}</p></div>
-                    <div className='p'><LinkIcon className='icon-color'/><a href={company.link} target='blank'>Apply link</a></div>
+                    <div className='p'><LinkIcon className='icon-color'/> <a href={company.link} target='blank' onClick={() => handleApplyLinkClick(company.name, registerNumber)}>Apply link</a></div>
                   </div>
                 ))}
-            </div>  
+              </div>  
+            </div>
           </div>
-        </div>
-        
         </div>
       ) : (
         <p>Unauthorized...</p>
       )}
-
-      
+      {/* Snackbar for displaying message */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000} // Duration to display the Snackbar
+        onClose={handleCloseSnackbar} // Function to handle close event
+        message="Applied for Company" // Message to display
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }} 
+      />
     </div>
   );
 }

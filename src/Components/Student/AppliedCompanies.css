@@ -1,0 +1,35 @@
+.applied-companies-container {
+    margin-top: 20px;
+  }
+  
+  .applied-companies-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .company-card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .company-card .p {
+    display: flex;
+    align-items: center;
+  }
+  
+  .icon-color {
+    margin-right: 5px;
+  }
+  
+  .company-card h3 {
+    margin: 0;
+  }
+  
+  .company-card p {
+    margin: 0;
+    margin-left: 5px;
+  }
+  
