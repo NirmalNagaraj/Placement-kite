@@ -36,6 +36,7 @@ export default function App()  {
       <div>
         <Routes>
           <Route path="/" element={<Home />}></Route>
+          <Route exact path="/home" element={<Home />} />
           <Route exact path="/report" element={<ReportPage />} />
           <Route exact path="/login" element={<Login />}/>
           <Route exact path="/dashboard" element={<Dashboard />}/>
