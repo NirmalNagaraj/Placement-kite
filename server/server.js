@@ -8,7 +8,7 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
-const { log } = require('console');
+
 
 
 const app = express();
@@ -29,10 +29,11 @@ app.use(express.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'root',
+  password: 'Beelzebub',
   database: 'students_data',
+  port:'3308'
 }); 
-
+ 
 connection.connect((error) => {
   if (error) {
     console.error('Error connecting to database:', error);
@@ -144,7 +145,7 @@ app.post('/faculty/login', (req, res) => {
   connection.query(query, [username, password], (err, result) => {
     if (err) {
       res.status(500).send('Internal server error');
-      return;
+      return; 
     }
     if (result.length > 0) {
       res.status(200).send({ message: 'Login successful' });
@@ -232,7 +233,7 @@ app.post('/hiring-update', (req, res) => {
 });
 app.get('/hiring-count', (req, res) => {
   // Query to calculate the sum of the hiring field value in the company_data table
-  const sql_students = 'SELECT COUNT(`University Roll Number`) AS totalCount FROM db';
+  const sql_students = 'SELECT COUNT(RegisterNumber) AS totalCount FROM UserDetails';
   const sql = 'SELECT SUM(hired) AS totalHiring FROM company_data';
 
   connection.query(sql, (error1, results1) => {
@@ -262,7 +263,7 @@ app.get('/hiring-count', (req, res) => {
       console.log('Total count:', totalCount);
     });
   });
-});
+}); 
 
 app.post('/placement-info', (req, res) => {
     const { companyName, studentInfo } = req.body;
@@ -281,7 +282,7 @@ app.post('/placement-info', (req, res) => {
                     }
                 });
             });
-        } catch (error) {
+        } catch (error) { 
             res.status(500).json({ error: 'Internal server error' });
             return;
         }
@@ -427,6 +428,28 @@ app.post('/offerLetter', verifyToken,upload.single('pdfFile'), (req, res) => {
     });
   });
 });
+
+app.get('/api/all-questions', (req, res) => {
+  // Fetch all questions from the SolutionData table
+  connection.query('SELECT * FROM SolutionData', (error, questions) => {
+    if (error) {
+      console.error('Error fetching questions:', error);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    // Process the blob data for each question
+    questions.forEach(question => {
+      // Convert blob data to a buffer
+      const bufferData = Buffer.from(question.solution_data, 'binary');
+      // Convert buffer to base64
+      question.solution_data = bufferData.toString('base64');
+    });
+
+    // Send the questions data in the response
+    res.status(200).json(questions);
+  });
+});
+
 
 app.post('/api/upload-qp', verifyToken, upload.single('solution_data'), (req, res) => {
   const { company_name, round, question_description, solution_type } = req.body;
@@ -719,9 +742,9 @@ app.post('/verify-otp', (req, res) => {
     res.status(200).send('OTP verified successfully');
   } else {
     // Invalid OTP
-    res.status(401).json({ error: 'Invalid OTP' });
+    res.status(401).json({ error: 'Invalid OTP' }); 
   }
-});
+}); 
 
 app.post('/api/reset-password', verifyToken, (req, res) => {
   const { newPassword, repeatPassword } = req.body;

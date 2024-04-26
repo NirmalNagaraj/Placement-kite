@@ -7,6 +7,7 @@ import './FacultyLogin.css';
 import axios from 'axios';
 import InputText from '../../InputText'
 import InputPass from '../../InputPass';
+import { TextField } from '@mui/material';
 
 
 function FacultyLogin() {
@@ -20,7 +21,7 @@ function FacultyLogin() {
       const response = await axios.post('http://localhost:3000/faculty/login', { username, password });
       console.log(response.data);
       if (response.status === 200) {
-        navigate('/add-company'); 
+        navigate('/dashboard-faculty'); 
       } 
     } catch (error) {
       console.error(error.response.data); // Handle login error
@@ -36,7 +37,7 @@ function FacultyLogin() {
         <div className='form-group'>
           <h1>Faculty Login</h1>
           <form onSubmit={handleSubmit}>
-            <InputText
+            <input
               label="User name"
               type='text'
               value={username}
