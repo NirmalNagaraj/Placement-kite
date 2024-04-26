@@ -8,7 +8,7 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
-
+const sendEmail =require('./mail')
 
 
 const app = express();
@@ -354,26 +354,66 @@ app.post('/userDetails', verifyToken, (req, res) => {
   console.log(universityRollNumber);
 
   // Your SQL query to insert data into the UserDetails table
-  const query = `
+  const userDetailsQuery = `
     INSERT INTO UserDetails (RegisterNumber, Name, Gender, Branch, Marks10, ModeOfStudy, Marks12orDiploma,
       CGPA, Backlogs, HistoryOfArrears, MobileNumber, Email,Residence, Address,
       Degree, YearOfPassing)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-  `; 
-  const values = [
+  `;
+
+  // Your SQL query to insert data into the EmailDetails table
+  const emailDetailsQuery = `
+    INSERT INTO EmailDetails (registerNumber, email)
+    VALUES (?, ?)
+  `;
+
+  const userDetailsValues = [
     universityRollNumber, name,gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
     historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
   ];
-  console.log(values);
-  // Execute the SQL query to insert user details
-  connection.query(query, values, (error, results, fields) => {
-    if (error) {
-      console.error('Error inserting user details:', error);
-      return res.status(500).json({ error: 'An error occurred while inserting user details' });
+
+  const emailDetailsValues = [
+    universityRollNumber, email
+  ];
+
+  // Execute both SQL queries to insert user details and email details
+  connection.beginTransaction((err) => {
+    if (err) {
+      console.error('Error beginning transaction:', err);
+      return res.status(500).json({ error: 'An error occurred while beginning transaction' });
     }
-    res.json({ success: true });
+
+    connection.query(userDetailsQuery, userDetailsValues, (error, results, fields) => {
+      if (error) {
+        connection.rollback(() => {
+          console.error('Error inserting user details:', error);
+          res.status(500).json({ error: 'An error occurred while inserting user details' });
+        });
+      }
+
+      connection.query(emailDetailsQuery, emailDetailsValues, (err, results) => {
+        if (err) {
+          connection.rollback(() => {
+            console.error('Error inserting email details:', err);
+            res.status(500).json({ error: 'An error occurred while inserting email details' });
+          });
+        }
+
+        connection.commit((err) => {
+          if (err) {
+            connection.rollback(() => {
+              console.error('Error committing transaction:', err);
+              res.status(500).json({ error: 'An error occurred while committing transaction' });
+            });
+          }
+          console.log('Transaction completed successfully');
+          res.json({ success: true });
+        });
+      });
+    });
   });
 });
+ 
 
 app.get('/verify-user',verifyToken, (req, res) => {
   // Extract universityRollNumber from request headers
