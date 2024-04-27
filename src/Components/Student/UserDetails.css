@@ -1,12 +1,41 @@
-.main-div{
+.main-div {
     text-align: center;
-}
+  }
 
-.form-div{
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 20px;
-    justify-items: center;
+h4{
+    font-size: 30px;
+}  
+  
+  .form-container {
+    margin-top: 10px;
+  }
+  
+  .form-div {
+    display: flex;
+    flex-direction: column; /* Change to column */
     align-items: center;
     padding: 40px 60px;
-}
+  }
+  
+  input, select {
+    width: 600px; /* Adjust width as needed */
+    margin-bottom: 20px; /* Add margin bottom */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    width: 300px; /* Adjust width as needed */
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  

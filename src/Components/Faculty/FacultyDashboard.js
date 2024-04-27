@@ -23,6 +23,7 @@ export default function FacultyDashboard() {
       try {
         const response = await axios.get('http://localhost:3000/previous');
         setCompanyDrives(response.data);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching company drives:', error);
       }

@@ -26,6 +26,7 @@ import UploadOfferLetter from './Components/Student/OfferLetter';
 import QP from './Components/Student/QP';
 import QBList from './Components/Student/QPlist';
 import QPUpload from './Components/Student/QP';
+import Questiondetails from './Components/Student/Questiondetails';
 
 
 
@@ -56,7 +57,7 @@ export default function App()  {
            <Route path="/Details" element={<UserDetails />} />
            <Route path="/QuestionBank" element={<QPUpload />} />
           <Route path="/QBlist/:companyName" element={<QBList />} />
-
+          <Route path="/question/:companyName/:id" element={<Questiondetails />} />
            <Route path="/offerLetter" element={<UploadOfferLetter />} />
           
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />

@@ -8,7 +8,8 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
-const sendEmail =require('./mail')
+const nodemailer = require('nodemailer');
+
 
 
 const app = express();
@@ -60,6 +61,35 @@ const verifyToken = (req, res, next) => {
 };
 
 
+const sendEmail = async (to, subject, text) => {
+  try {
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "bidblogger19@gmail.com",
+        pass: "cbzvfcibscbseuty",
+      },
+    });
+
+    // Define email options
+    const mailOptions = {
+      from: "bidblogger19@gmail.com",
+      to: Array.isArray(to) ? to.join(', ') : to, // Convert array of emails to comma-separated string if needed
+      subject,
+      text,
+    };
+    console.log(mailOptions);
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    console.log('Email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return false;
+  }
+};
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -259,8 +289,8 @@ app.get('/hiring-count', (req, res) => {
 
       // Send both counts as a response
       res.status(200).json({ totalHiring, totalCount });
-      console.log('Total hiring count:', totalHiring);
-      console.log('Total count:', totalCount);
+      // console.log('Total hiring count:', totalHiring);
+      // console.log('Total count:', totalCount);
     });
   });
 }); 
@@ -314,8 +344,8 @@ app.get('/students/info', (req, res) => {
   // Fetch details from the db table based on the university number
   const query = `
     SELECT *
-    FROM db
-    WHERE \`University Roll Number\` = ?
+    FROM UserDetails
+    WHERE RegisterNumber = ?
   `;
   connection.query(query, [universityRollNumber], (error, studentDetails, fields) => {
     if (error) {
@@ -351,14 +381,25 @@ app.post('/userDetails', verifyToken, (req, res) => {
 
   // Extract RegisterNumber from decoded JWT token
   const { universityRollNumber } = req.user;
-  console.log(universityRollNumber);
+
+  // Calculate the grade based on the given conditions
+  let grade;
+  if (marks10 < 60 || marks12OrDiploma < 60 || cgpa < 6) {
+    grade = 1;
+  } else if (marks10 >= 60 && marks10 <= 79 && marks12OrDiploma >= 60 && marks12OrDiploma <= 79) {
+    grade = 2;
+  } else if (marks10 > 79 && marks12OrDiploma > 79 && cgpa > 7) {
+    grade = 3;
+  } else {
+    grade = 1; // Default to grade 1 if conditions are not met
+  }
 
   // Your SQL query to insert data into the UserDetails table
   const userDetailsQuery = `
     INSERT INTO UserDetails (RegisterNumber, Name, Gender, Branch, Marks10, ModeOfStudy, Marks12orDiploma,
-      CGPA, Backlogs, HistoryOfArrears, MobileNumber, Email,Residence, Address,
-      Degree, YearOfPassing)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      CGPA, Backlogs, HistoryOfArrears, MobileNumber, Email, Residence, Address,
+      Degree, YearOfPassing, Grade)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
   `;
 
   // Your SQL query to insert data into the EmailDetails table
@@ -368,8 +409,8 @@ app.post('/userDetails', verifyToken, (req, res) => {
   `;
 
   const userDetailsValues = [
-    universityRollNumber, name,gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
-    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing
+    universityRollNumber, name, gender, branch, marks10, educationLevel, marks12OrDiploma, cgpa, backlogs,
+    historyOfArrears, mobileNumber, email, residence, address, degree, yearOfPassing, grade
   ];
 
   const emailDetailsValues = [
@@ -413,7 +454,7 @@ app.post('/userDetails', verifyToken, (req, res) => {
     });
   });
 });
- 
+
 
 app.get('/verify-user',verifyToken, (req, res) => {
   // Extract universityRollNumber from request headers
@@ -487,6 +528,24 @@ app.get('/api/all-questions', (req, res) => {
 
     // Send the questions data in the response
     res.status(200).json(questions);
+  });
+});
+
+app.get('/api/qbdetails', (req, res) => {
+  const companyName = req.query.companyName; // Extract company name from query parameter
+  const id = req.query.id; // Extract ID from query parameter
+  console.log(companyName,id);
+  // SQL query to select company details based on company name and ID
+  const sql = 'SELECT * FROM SolutionData WHERE company_name = ? AND id = ?';
+
+  // Execute the SQL query with the company name and ID parameters
+  connection.query(sql, [companyName, id], (err, results) => {
+    if (err) { 
+      console.error('Error fetching company details:', err);
+      return res.status(500).json({ error: 'Failed to fetch company details' });
+    }
+    // Send the fetched company details as JSON response
+    res.json(results[0]); // Assuming there's only one company detail with the given name and ID
   });
 });
 
@@ -687,7 +746,6 @@ app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
 });
 
 
-
 // // Route to fetch all PDF documents from the database
 // app.get('/api/get-all-pdfs', (req, res) => {
 //   // Query to retrieve all PDF data from the database
@@ -704,8 +762,6 @@ app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
 //     res.json(results);
 //   });
 // });
-
-
 
 
 app.post('/validate', (req, res) => {
@@ -753,7 +809,7 @@ app.post('/send-otp', (req, res) => {
   twilioClient.messages
     .create({
       body: `Your OTP is ${otp}`,
-      from: '+16503514109', // Replace with your Twilio phone number
+      from: '+16503514109',
       to: mobileNumber
     })
     .then(message => {
@@ -766,22 +822,17 @@ app.post('/send-otp', (req, res) => {
     });
 });
 
-// Route to verify OTP
 app.post('/verify-otp', (req, res) => {
   const { mobileNumber, otp } = req.body;
 
-  // Check if OTP exists in cache
   if (!otpCache[mobileNumber]) {
     return res.status(400).json({ error: 'OTP not sent or expired' });
   }
 
-  // Verify OTP
   if (otpCache[mobileNumber] === otp) {
-    // OTP is valid, clear it from cache (OTP can be used only once)
     delete otpCache[mobileNumber];
     res.status(200).send('OTP verified successfully');
   } else {
-    // Invalid OTP
     res.status(401).json({ error: 'Invalid OTP' }); 
   }
 }); 
@@ -790,22 +841,66 @@ app.post('/api/reset-password', verifyToken, (req, res) => {
   const { newPassword, repeatPassword } = req.body;
   const universityRollNumber = req.user.universityRollNumber;
   console.log(universityRollNumber);
-  // Check if newPassword and repeatPassword match
+
   if (newPassword !== repeatPassword) {
     return res.status(400).json({ error: 'Passwords do not match' });
   }
 
-  // Update the password in the database for the user
+ 
   connection.query('UPDATE login_info SET Password = ? WHERE University_Roll_Number = ?', [newPassword, universityRollNumber], (error, results, fields) => {
     if (error) {
       console.error('Error updating password:', error);
       return res.status(500).json({ error: 'An error occurred while updating password' });
     }
 
-    // Password updated successfully
+
     res.status(200).json({ message: 'Password updated successfully' });
   });
 });
+
+app.post('/api/EmailAlert', (req, res) => {
+  const { companyName, criteria } = req.body;
+
+  // Determine the grade based on the criteria
+  let grade;
+  switch(criteria) {
+    case '80%':
+      grade = 3;
+      break;
+    case '60%':
+      grade = 2;
+      break;
+    case 'common':
+      grade = 1;
+      break;
+    default:
+      grade = 1; // Default to grade 1 for unknown criteria
+  }
+
+  const query = `SELECT Email FROM UserDetails WHERE Grade = ?`;
+
+  // Execute the SQL query
+  connection.query(query, [grade], async (error, results, fields) => {
+    if (error) {
+      console.error('Error executing SQL query:', error);
+      return res.status(500).json({ error: 'An error occurred while fetching email details' });
+    }
+    const emails = results.map(result => result.Email);
+    console.log(emails);
+    // Send email to multiple recipients
+    const subject = `New Company Added: ${companyName}`;
+    const text = `Dear Student,\n\nWe are pleased to inform you that a new company (${companyName}) has been added to our placement list. Please check your dashboard for more details.\n\nRegards,\nPlacement Cell`;
+    try {
+      await sendEmail(emails, subject, text);
+      console.log('Email sent successfully to:', emails);
+      res.json({ success: true, emails });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      res.status(500).json({ error: 'An error occurred while sending email' });
+    }
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

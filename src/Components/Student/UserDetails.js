@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, FormControl, FormLabel, Select, MenuItem } from '@mui/material';
 import './UserDetails.css';
 
 import axios from 'axios';
@@ -21,7 +20,7 @@ const UserDetailsPage = () => {
     historyOfArrears: '',
     mobileNumber: '',
     email: '',
-    residence: '', // Added residence to formData
+    residence: '',
     address: '',
     degree: '',
     yearOfPassing: '',
@@ -96,92 +95,60 @@ const UserDetailsPage = () => {
 
   return (
     <div className='main-div'>
-    <Typography variant="h4">User Details</Typography>
+    <h4>User Details</h4>
     <form onSubmit={handleSubmit} className="form-container">
-      
-    <div className='form-div'>
-      <TextField label="Name" name="name" fullWidth onChange={handleInputChange} />
-      
-      <FormControl fullWidth>
-        <FormLabel component="legend">Gender</FormLabel>
-        <Select
-          labelId="gender-label"
-          id="gender"
-          value={gender}
-          onChange={handleGenderChange}
-          name="gender"
-        >
-          <MenuItem value="Male">Male</MenuItem>
-          <MenuItem value="Female">Female</MenuItem>
-        </Select>
-      </FormControl>
+      <div className='form-div'>
+        <input type="text" placeholder="Name" name="name" onChange={handleInputChange} />
+        
+        <select value={gender} onChange={handleGenderChange} name="gender" placeholder="Select Gender">
+          <option value="">Select Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
 
-      <FormControl fullWidth>
-        <FormLabel component="legend">Branch</FormLabel>
-        <Select
-          labelId="branch-label"
-          id="branch"
-          value={branch}
-          onChange={handleBranchChange}
-          name="branch"
-        >
-          <MenuItem value="CSE">CSE</MenuItem>
-          <MenuItem value="IT">IT</MenuItem>
-          <MenuItem value="CSBS">CSBS</MenuItem>
-        </Select>
-      </FormControl>
+        <select value={branch} onChange={handleBranchChange} name="branch" placeholder="Select Branch">
+          <option value="">Select Department</option>
+          <option value="CSE">CSE</option>
+          <option value="IT">IT</option>
+          <option value="CSBS">CSBS</option>
+          <option value="AIDS">AIDS</option>
+          <option value="MECH">MECH</option>
+          <option value="ECE">ECE</option>
+        </select>
 
-      <TextField label="10th Mark" name="marks10" fullWidth onChange={handleInputChange} />
+        <input type="text" placeholder="10th Mark" name="marks10" onChange={handleInputChange} /> 
+        <select value={educationLevel} onChange={handleEducationLevelChange} name="educationLevel" placeholder="Select Education Level">
+          <option value="">Select Education Level</option>
+          <option value="12">12</option>
+          <option value="diploma">Diploma</option>
+        </select>
 
-      <FormControl fullWidth>
-        <FormLabel component="legend">Mode of Education</FormLabel>
-        <Select
-          labelId="education-level-label"
-          id="education-level"
-          value={educationLevel}
-          onChange={handleEducationLevelChange}
-          name="educationLevel"
-        >
-          <MenuItem value="12">12</MenuItem>
-          <MenuItem value="diploma">Diploma</MenuItem>
-        </Select>
-      </FormControl>
+        {(educationLevel === '12' || educationLevel === 'diploma') && (
+          <input type="text" placeholder={educationLevel === '12' ? "Marks 12" : "Diploma Marks"} name="marks12OrDiploma" onChange={handleInputChange} />
+        )}
 
-      {(educationLevel === '12' || educationLevel === 'diploma') && (
-        <TextField label={educationLevel === '12' ? "Marks 12" : "Diploma Marks"} name="marks12OrDiploma" fullWidth onChange={handleInputChange} />
-      )}
+        <input type="text" placeholder="CGPA" name="cgpa" onChange={handleInputChange} />
+        <input type="text" placeholder="Backlogs" name="backlogs" onChange={handleInputChange} />
+        <input type="text" placeholder="History of Arrears" name="historyOfArrears" onChange={handleInputChange} />
+        <input type="text" placeholder="Mobile Number" name="mobileNumber" onChange={handleInputChange} />
+        <input type="text" placeholder="Email" name="email" onChange={handleInputChange} />
 
-      <TextField label="CGPA" name="cgpa" fullWidth onChange={handleInputChange} />
-      <TextField label="Backlogs" name="backlogs" fullWidth onChange={handleInputChange} />
-      <TextField label="History of Arrears" name="historyOfArrears" fullWidth onChange={handleInputChange} />
-      <TextField label="Mobile Number" name="mobileNumber" fullWidth onChange={handleInputChange} />
-      <TextField label="Email" name="email" fullWidth onChange={handleInputChange} />
+        <select value={residence} onChange={handleResidenceChange} name="residence" placeholder="Select Residence">
+          <option value="">Select Residence</option>
+          <option value="Hosteller">Hosteller</option>
+          <option value="Dayscholar">Dayscholar</option>
+        </select>
 
-      <FormControl fullWidth>
-        <FormLabel component="legend">Residence</FormLabel>
-        <Select
-          labelId="residence-label"
-          id="residence"
-          value={residence}
-          onChange={handleResidenceChange}
-          name="residence"
-        >
-          <MenuItem value="Hosteller">Hosteller</MenuItem>
-          <MenuItem value="Dayscholar">Dayscholar</MenuItem>
-        </Select>
-      </FormControl>
-
-      <TextField label="Address" name="address" fullWidth onChange={handleInputChange} />
-      <TextField label="Degree" name="degree" fullWidth onChange={handleInputChange} />
-      <TextField label="Year of Passing" name="yearOfPassing" fullWidth onChange={handleInputChange} />
-      <TextField label="Domain" name="domain" fullWidth onChange={handleInputChange} />
+        <input type="text" placeholder="Address" name="address" onChange={handleInputChange} />
+        <input type="text" placeholder="Degree" name="degree" onChange={handleInputChange} />
+        <input type="text" placeholder="Year of Passing" name="yearOfPassing" onChange={handleInputChange} />
+        <input type="text" placeholder="Domain" name="domain" onChange={handleInputChange} />
       </div>
   
-      <Button type="submit" variant="contained" color="primary">Submit</Button>
+      <button type="submit">Submit</button>
     </form>
-    </div>
-   
-  );
+  </div>
+);
 };
 
 export default UserDetailsPage;
