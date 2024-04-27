@@ -26,7 +26,8 @@ import UploadOfferLetter from './Components/Student/OfferLetter';
 import QP from './Components/Student/QP';
 import QBList from './Components/Student/QPlist';
 import QPUpload from './Components/Student/QP';
-
+import AppliedCompanies from './Components/Student/AppliedCompanies';
+import AppliedForm from './Components/Student/AppliedForm';
 
 
 export default function App()  {
@@ -44,21 +45,21 @@ export default function App()  {
           <Route exact path="/previous" element={<PreviousPage />}/>
           <Route exact path="/add-company" element={<CompanyForm />}/>
           <Route exact path="/cgpa-upload" element={<StudentForm />}/>
-           <Route exact path="/pdf" element={<PdfListPage />}/>
+          <Route exact path="/pdf" element={<PdfListPage />}/>
           <Route exact path="/validate-change" element={<ValidatePass />}/>
-           <Route exact path="/otp" element={<OTPVerificationPage />}/>
-           <Route exact path="/change" element={<ChangePasswordForm />}/>
+          <Route exact path="/otp" element={<OTPVerificationPage />}/>
+          <Route exact path="/change" element={<ChangePasswordForm />}/>
           <Route exact path="/update-company" element={<UploadPDF />}/>
-           <Route exact path="/placed" element={<PlacementForm />}/>
-           <Route path="/students-placed" element={<PlacedStudents />} />
-           <Route path="/student-info" element={<StudentInfoPage />} />
-           <Route path="/userDetails" element={<UserDetailsPage />} />
-           <Route path="/Details" element={<UserDetails />} />
-           <Route path="/QuestionBank" element={<QPUpload />} />
+          <Route exact path="/placed" element={<PlacementForm />}/>
+          <Route path="/students-placed" element={<PlacedStudents />} />
+          <Route path="/student-info" element={<StudentInfoPage />} />
+          <Route path="/userDetails" element={<UserDetailsPage />} />
+          <Route path="/Details" element={<UserDetails />} />
+          <Route path="/QuestionBank" element={<QPUpload />} />
           <Route path="/QBlist/:companyName" element={<QBList />} />
-
-           <Route path="/offerLetter" element={<UploadOfferLetter />} />
-          
+          <Route path="/appliedCompanies" element={<AppliedCompanies />} />
+          <Route path="/offerLetter" element={<UploadOfferLetter />} />
+          <Route path="/appliedForm/:companyname" element={<AppliedForm />} />
           <Route  path="*" element={`<h1>404 - Page Not Found</h1>`} />
         </Routes>
       </div>

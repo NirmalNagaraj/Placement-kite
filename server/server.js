@@ -8,7 +8,9 @@ const csvParser = require('csv-parser');
 const fs = require('fs');
 const twilio = require('twilio');
 const crypto = require('crypto');
-const sendEmail =require('./mail')
+const { log } = require('console');
+const nodemailer = require('nodemailer');
+
 
 
 const app = express();
@@ -29,9 +31,8 @@ app.use(express.json());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Beelzebub',
-  database: 'students_data',
-  port:'3308'
+  password: 'root',
+  database: 'students_data'
 }); 
  
 connection.connect((error) => {
@@ -59,6 +60,35 @@ const verifyToken = (req, res, next) => {
   });
 };
 
+const sendEmail = async (to, subject, text) => {
+  try {
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: "bidblogger19@gmail.com",
+        pass: "cbzvfcibscbseuty",
+      },
+    });
+
+    // Define email options
+    const mailOptions = {
+      from: "bidblogger19@gmail.com",
+      to: Array.isArray(to) ? to.join(', ') : to, // Convert array of emails to comma-separated string if needed
+      subject,
+      text,
+    };
+    console.log(mailOptions);
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    console.log('Email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return false;
+  }
+};
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -807,6 +837,13 @@ app.post('/api/reset-password', verifyToken, (req, res) => {
   });
 });
 
+// Dummy database to store applied companies
+
+
+// POST route to insert company name and register number into applied_companies
+
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-});  
+});

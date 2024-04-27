@@ -37,7 +37,7 @@ function FacultyLogin() {
         <div className='form-group'>
           <h1>Faculty Login</h1>
           <form onSubmit={handleSubmit}>
-            <input
+            <TextField className='input'
               label="User name"
               type='text'
               value={username}

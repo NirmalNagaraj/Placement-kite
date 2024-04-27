@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { TextField, Select, MenuItem, FormControl, InputLabel, Snackbar } from '@mui/material';
 import './Company.css';
+import { useNavigate } from 'react-router-dom';
 
 function CompanyForm() {
   const [companyName, setCompanyName] = useState('');
@@ -11,11 +12,12 @@ function CompanyForm() {
   const [criteria, setCriteria] = useState('80%');
   const [link, setLink] = useState('');
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:3000/company-data', {
+      const response = await axios.post('http://localhost:3000/company-data', {
         name: companyName,
         date,
         ctc,
@@ -23,6 +25,9 @@ function CompanyForm() {
         criteria,
         link
       });
+      if (response.status === 200) {
+        navigate('/dashboard-faculty');
+      }
       console.log(role);
       setSnackbarOpen(true); // Open the Snackbar on successful submission
     } catch (error) {
@@ -37,90 +42,83 @@ function CompanyForm() {
     setSnackbarOpen(false); // Close the Snackbar when clicked on the close button
   };
 
-  const handleRoleChange = (event) => {
-    console.log("Role:", event.target.value); // Log the value received
-    setRole(event.target.value); // Update the state
-  };
-
   return (
     <div className='container1'>
-  <div className='r'>
-    <div className='form-group'>
-      <h2>Company Form</h2>
-      <form onSubmit={handleSubmit} className='form-container'>
-        <div className='input-field'>
-          <label htmlFor="companyName">Company Name</label>
-          <input 
-            type="text" 
-            id="companyName" 
-            value={companyName} 
-            onChange={(e) => setCompanyName(e.target.value)} 
-            required 
-            className='field'
-          />
+      <div className='r'>
+        <div className='form-group'>
+          <h2>Company Form</h2>
+          <form onSubmit={handleSubmit} className='form-container'>
+            <div className='input-field'>
+              <label htmlFor="companyName">Company Name</label>
+              <input 
+                type="text" 
+                id="companyName" 
+                value={companyName} 
+                onChange={(e) => setCompanyName(e.target.value)} 
+                required 
+                className='field'
+              />
+            </div>
+            <div className='input-field'>
+              <label htmlFor="date">Date</label>
+              <input 
+                type="date" 
+                id="date" 
+                value={date} 
+                onChange={(e) => setDate(e.target.value)} 
+                required 
+                className='field'
+              />
+            </div>
+            <div className='input-field'>
+              <label htmlFor="ctc">CTC</label>
+              <input 
+                type="number" 
+                id="ctc" 
+                value={ctc} 
+                onChange={(e) => setCtc(e.target.value)} 
+                className='field'
+              />
+            </div>
+            <div className='input-field'>
+              <label htmlFor="role">Role</label>
+              <input 
+                type="text" 
+                id="role" 
+                value={role} 
+                onChange={(e) => setRole(e.target.value)} 
+                required 
+                className='field'
+              />
+            </div>
+            <div className='input-field'>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="criteria">Criteria</InputLabel>
+                <Select 
+                  value={criteria} 
+                  onChange={(e) => setCriteria(e.target.value)} // Update the criteria state
+                  inputProps={{ id: 'criteria' }} 
+                  className='field'
+                >
+                  <MenuItem value="80%">Overall 80%</MenuItem>
+                  <MenuItem value="60%">Overall 60%</MenuItem>
+                  <MenuItem value="common">Common for All</MenuItem> {/* Set the value to "common" */}
+                </Select>
+              </FormControl>
+            </div>
+            <div className='input-field'>
+              <label htmlFor="link">Link</label>
+              <input 
+                type="text" 
+                id="link" 
+                value={link} 
+                onChange={(e) => setLink(e.target.value)} 
+                className='field'
+              />
+            </div>
+            <button type="submit" className='logBtn'>Submit</button>
+          </form>
         </div>
-        <div className='input-field'>
-          <label htmlFor="date">Date</label>
-          <input 
-            type="date" 
-            id="date" 
-            value={date} 
-            onChange={(e) => setDate(e.target.value)} 
-            required 
-            className='field'
-          />
-        </div>
-        <div className='input-field'>
-          <label htmlFor="ctc">CTC</label>
-          <input 
-            type="number" 
-            id="ctc" 
-            value={ctc} 
-            onChange={(e) => setCtc(e.target.value)} 
-            className='field'
-          />
-        </div>
-        <div className='input-field'>
-          <label htmlFor="role">Role</label>
-          <input 
-            type="text" 
-            id="role" 
-            value={role} 
-            onChange={(e) => setRole(e.target.value)} 
-            required 
-            className='field'
-          />
-        </div>
-        <div className='input-field'>
-          <FormControl fullWidth>
-            <InputLabel htmlFor="criteria">Criteria</InputLabel>
-            <Select 
-              value={criteria} 
-              onChange={handleRoleChange} 
-              inputProps={{ id: 'criteria' }} 
-              className='field'
-            >
-              <MenuItem value="80%">Overall 80%</MenuItem>
-              <MenuItem value="60%">Overall 60%</MenuItem>
-              <MenuItem value="common">Common for All</MenuItem>
-            </Select>
-          </FormControl>
-        </div>
-        <div className='input-field'>
-          <label htmlFor="link">Link</label>
-          <input 
-            type="text" 
-            id="link" 
-            value={link} 
-            onChange={(e) => setLink(e.target.value)} 
-            className='field'
-          />
-        </div>
-        <button type="submit" className='logBtn'>Submit</button>
-      </form>
-    </div>
-  
-
         
         {/* Snackbar for showing success message */}
         <Snackbar

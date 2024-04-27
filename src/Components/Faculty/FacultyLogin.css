@@ -40,6 +40,10 @@ form{
     gap:20px;
 }
 
+.input{
+    width: 510px;
+}
+
 .logBtn{
     background-color: black;
     color: white;

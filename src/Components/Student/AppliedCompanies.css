@@ -1,0 +1,33 @@
+.re-container {
+  max-width: 800px; 
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.re-applied-head {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.re-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+
+.re-card {
+  flex: 0 0 calc(50% - 20px); 
+  margin: 10px;
+  max-width: calc(50% - 20px);
+}
+
+.re-card-content {
+  flex-grow: 1;
+}
+
+.review-btn{
+  width:60%;
+}
