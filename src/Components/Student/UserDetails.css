@@ -1,5 +1,6 @@
 .main-div {
     text-align: center;
+    overflow-y: auto;
   }
 
 h4{

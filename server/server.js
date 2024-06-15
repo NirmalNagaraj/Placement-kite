@@ -14,7 +14,7 @@ const nodemailer = require('nodemailer');
 
 const app = express();
 const port = 3000;
-const accountSid = 'ACbee68d94e3e4db20026db2754e316db9'; // Replace with your Twilio Account SID
+const accountSid = 'ACbee68d94e3e4db20026db2754e316db9';
 const authToken = '5d66279b0123a1e91a34c113e619d8bf'; // Replace with your Twilio Auth Token
 const twilioClient = twilio(accountSid, authToken);
 const generateOTP = () => {
@@ -40,7 +40,7 @@ connection.connect((error) => {
     console.error('Error connecting to database:', error);
     return;
   }
-  console.log('Connected to the database successfully');
+  console.log('Connected to the Nirmal successfully');
 });
 
 const verifyToken = (req, res, next) => {
@@ -101,7 +101,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 app.use(bodyParser.json());
-
 app.get('/api/data', (req, res) => {
   const tenthValue = parseFloat(req.query.tenth) || 0;
   const twelfthValue = parseFloat(req.query.twelfth) || 0;
@@ -110,22 +109,21 @@ app.get('/api/data', (req, res) => {
 
   const query = `
     SELECT 
-      \`Sl.No.\`,
-      \`Student Name\`, 
-      \`Email ID\`, 
-      \`Mobile Number\`,
-      \`Marks -12th\` 
+      \`Name\`, 
+      \`Email\`, 
+      \`MobileNumber\`,
+      \`Marks12orDiploma\` 
     FROM 
-      db
+      \`userdetails\`
     WHERE 
-      (\`Marks -10th\` >= ? OR ? = 0)
-      AND (\`Marks -12th\` >= ? OR ? = 0)
-      AND (\`No. of current backlogs\` <= ?)
-      AND (\`Aggregate %\` >= ? OR ? = 0)
+      (\`Marks10\` >= ? OR ? = 0)
+      AND (\`Marks12orDiploma\` >= ? OR ? = 0)
+      AND (\`Backlogs\` <= ?)
+      AND (\`CGPA\` >= ? OR ? = 0)
   `;
-   const values = [tenthValue, tenthValue, twelfthValue, twelfthValue, currentBacklogsValue, cgpaValue, cgpaValue];
+  
+  const values = [tenthValue, tenthValue, twelfthValue, twelfthValue, currentBacklogsValue, cgpaValue, cgpaValue];
 
- 
   connection.query(query, values, (error, results, fields) => {
     if (error) {
       console.error('Error executing query:', error);
@@ -237,13 +235,13 @@ app.get('/personal-details', verifyToken, (req, res) => {
 });
 
 app.post('/company-data', (req, res) => {
-  const { name, date, ctc, role ,criteria ,link } = req.body;
-  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria ,link) VALUES (?,?, ?, ?, ? ,?)`;
-  connection.query(query, [name, date, ctc, role ,criteria , link], (error, results, fields) => {
+  const { name, date, ctc, role ,criteria ,link ,type} = req.body;
+  const query = `INSERT INTO company_data (name, date, ctc, role ,criteria ,link , type) VALUES (?,?, ?, ?, ? ,?,?)`;
+  connection.query(query, [name, date, ctc, role ,criteria , link , type], (error, results, fields) => {
     if (error) throw error;
     res.send('Data inserted successfully');
   });
-});
+}); 
 
 app.post('/hiring-update', (req, res) => {
   const { companyName,hiring  } = req.body;
@@ -684,9 +682,7 @@ app.post('/cgpa', (req, res) => {
   });
 });
 
-// server.js
 
-// Other imports and configurations
 
 app.post('/logout', (req, res) => {
   // Clear the token stored in the client (e.g., local storage)
@@ -725,14 +721,12 @@ app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
   const { companyName } = req.body;
   const pdfPath = req.file.path;
   console.log(companyName , pdfPath);
-  // Read the PDF file
   fs.readFile(pdfPath, (err, data) => {
     if (err) {
       console.error('Error reading PDF file:', err);
       return res.status(500).json({ error: 'Failed to upload PDF' });
     }
 
-    // Update PDF data in the database based on the company name
     const sql = 'UPDATE company_data SET pdf_data = ? WHERE name = ?';
     connection.query(sql, [data, companyName], (err, result) => {
       if (err) {
@@ -744,24 +738,6 @@ app.post('/api/update-pdf', upload.single('pdfFile'), (req, res) => {
     });
   });
 });
-
-
-// // Route to fetch all PDF documents from the database
-// app.get('/api/get-all-pdfs', (req, res) => {
-//   // Query to retrieve all PDF data from the database
-//   const sql = 'SELECT * FROM pdf_documents';
-
-//   connection.query(sql, (err, results) => {
-//     if (err) { 
-//       console.error('Error fetching PDFs from database:', err);
-//       res.status(500).json({ error: 'Failed to fetch PDFs from database' });
-//       return;
-//     }
-
-//     // Send the PDF data to the client
-//     res.json(results);
-//   });
-// });
 
 
 app.post('/validate', (req, res) => {
@@ -901,6 +877,61 @@ app.post('/api/EmailAlert', (req, res) => {
   });
 });
 
+app.post('/apply', verifyToken, (req, res) => {
+  const { companyName} = req.body;
+  const registerNumber = req.user.universityRollNumber;
+
+  if (!companyName || !registerNumber) {
+    return res.status(400).json({ error: 'Company name and register number are required' });
+  }
+  
+  
+  // Insert into applied_companies table (Dummy operation)
+  const sql = 'INSERT INTO applied_companies (company_name, register_number) VALUES (?, ?)';
+  connection.query(sql, [companyName, registerNumber], (err, result) => {
+    if (err) {
+      console.error('Error inserting into applied_companies:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    
+    console.log('Inserted into applied_companies:', result);
+    return res.status(201).json({ message: 'Applied successfully' });
+  });
+});
+
+app.get('/appliedCompanies', verifyToken, (req, res) => {
+  const sql = 'SELECT * FROM applied_companies WHERE register_number = ?';
+  const registerNumber = req.user.universityRollNumber;
+  connection.query(sql, [registerNumber], (err, results) => {
+    if (err) {
+      console.error('Error fetching applied companies:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    console.log('Fetched applied companies:', results);
+    return res.status(200).json(results);
+  });
+});
+
+app.post('/submitReview/:companyname',(req, res) => {
+  const {  role, review } = req.body;
+  const {companyName} = req.params;
+  console.log(companyName);
+
+  if (!companyName || !role || !review) {
+    return res.status(400).json({ error: 'Company name, role, review, and register number are required' });
+  }
+  
+  const sql = 'INSERT INTO applied_review (company_name, role, review) VALUES (?, ?, ?)';
+  connection.query(sql, [companyName, role, review], (err, result) => {
+    if (err) {
+      console.error('Error inserting into applied_companies:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+    
+    console.log('Inserted into applied_companies:', result);
+    return res.status(201).json({ message: 'Applied successfully' });
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

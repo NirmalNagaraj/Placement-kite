@@ -11,6 +11,7 @@ function CompanyForm() {
   const [role, setRole] = useState('');
   const [criteria, setCriteria] = useState('80%');
   const [link, setLink] = useState('');
+  const [type, setType] = useState('Service'); // New state variable for 'type'
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -23,10 +24,11 @@ function CompanyForm() {
         ctc,
         role,
         criteria,
-        link
+        link,
+        type // Include 'type' in the data sent to the API
       });
       if (response.status === 200) {
-        await axios.post('http://localhost:3000/api/EmailAlert',{companyName ,criteria});
+        await axios.post('http://localhost:3000/api/EmailAlert', { companyName, criteria });
         navigate('/dashboard-faculty');
       }
       console.log(role);
@@ -116,6 +118,20 @@ function CompanyForm() {
                 onChange={(e) => setLink(e.target.value)} 
                 className='field'
               />
+            </div>
+            <div className='input-field'>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="type">Type</InputLabel>
+                <Select
+                  value={type}
+                  onChange={(e) => setType(e.target.value)} // Update the type state
+                  inputProps={{ id: 'type' }}
+                  className='field'
+                >
+                  <MenuItem value="Service">Service</MenuItem>
+                  <MenuItem value="Product">Product</MenuItem>
+                </Select>
+              </FormControl>
             </div>
             <button type="submit" className='logBtn'>Submit</button>
           </form>
